@@ -4,9 +4,14 @@ namespace RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand> {
     public CreateUserCommandValidator() {
         RuleFor(cpau => cpau.Email)
-            .NotNull()
             .NotEmpty()
             .WithMessage("O campo e-mail precisa ser preenchido");
+
+        RuleFor(cpau => cpau.UserName) 
+            .NotEmpty()
+            .WithMessage("O campo username precisa ser preenchido")
+            .MinimumLength(6)
+            .WithMessage("O campo username precisa ter, pelo menos, 3 caracters");
 
         RuleFor(cpau => cpau.Email)
             .EmailAddress()

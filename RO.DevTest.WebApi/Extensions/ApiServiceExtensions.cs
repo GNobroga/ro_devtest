@@ -10,6 +10,8 @@ public static class ApiServiceExtensions {
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddScoped<ApiExceptionMiddleware>();
+        
+        services.AddAuthenticationServices(builder.Configuration);
 
         services.InjectPersistenceDependencies(builder.Configuration)
             .InjectInfrastructureDependencies(builder.Configuration);

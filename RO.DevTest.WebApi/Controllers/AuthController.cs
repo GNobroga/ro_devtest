@@ -1,9 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
-using RO.DevTest.Application.Contracts.Infrastructure;
 using RO.DevTest.Application.Features.Auth.Commands.LoginCommand;
-using RO.DevTest.Domain.Entities;
 
 namespace RO.DevTest.WebApi.Controllers;
 

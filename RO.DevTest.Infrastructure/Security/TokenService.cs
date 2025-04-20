@@ -5,8 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RO.DevTest.Application.Contracts.Infrastructure;
 using RO.DevTest.Domain.Entities;
-using RO.DevTest.Infrastructure.Settings;
-namespace RO.DevTest.Infrastructure.Abstractions;
+namespace RO.DevTest.Infrastructure.Security;
 
 /// <summary>
     /// Serviço responsável por gerar tokens JWT (JSON Web Token) para autenticação.
@@ -14,8 +13,6 @@ namespace RO.DevTest.Infrastructure.Abstractions;
     /// para a criação de tokens.
 /// </summary>
 public class TokenService : ITokenService {
-
-    private const string TokenTypeClaim = "type"; 
 
     private const int DefaultAccessTokenExpirationHours = 2;
     private const int DefaultRefreshTokenExpirationDays = 2;
@@ -77,19 +74,19 @@ public class TokenService : ITokenService {
          List<Claim> claims = [
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.DateTime),
-            new Claim(TokenTypeClaim, "Refresh")
+            new Claim(JwtClaimsConstants.TokenType, "Refresh")
         ];
         return claims;
     }
 
     private static List<Claim> BuildClaimsForAccessToken(User user, List<string> roles) {
         List<Claim> claims = [
-            new Claim(JwtRegisteredClaimNames.UniqueName, user.Name),
+            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName!),
             new Claim(JwtRegisteredClaimNames.Email, user.Email!),
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.DateTime)
+            new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.DateTime),
+            new Claim(JwtClaimsConstants.Role, string.Join(" ", roles))
         ];
-        roles.ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role)));
         return claims;
     }
 }

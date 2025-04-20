@@ -1,8 +1,13 @@
-﻿using MediatR;
+﻿using System.Net;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
+using RO.DevTest.Application.Features.User.Commands.DeleteUserCommand;
+using RO.DevTest.Application.Features.User.Commands.UpdateUserCommand;
+using RO.DevTest.Domain.Models;
 
 namespace RO.DevTest.WebApi.Controllers;
 
@@ -11,11 +16,46 @@ namespace RO.DevTest.WebApi.Controllers;
 public class UsersController(IMediator mediator) : Controller {
     private readonly IMediator _mediator = mediator;
 
-    [HttpPost]
+    [HttpPost("admin")]
     [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateUser([FromBody] CreateUserCommand request) {
-        CreateUserResult response = await _mediator.Send(request);
+    public async Task<IActionResult> CreateAdminUser([FromBody] CreateUserCommand request) {
+        request.Role = Domain.Enums.UserRoles.Admin;
+        return await CreateUser(request);
+    }
+
+    [HttpPost("customer")]
+    [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CreateCustomerUser([FromBody] CreateUserCommand request) {
+        request.Role = Domain.Enums.UserRoles.Customer;
+        return await CreateUser(request);
+    }
+   
+    private async Task<IActionResult> CreateUser(CreateUserCommand request) {
+        CreateUserResult result = await _mediator.Send(request);
+        ApiResponse<CreateUserResult> response = ApiResponse<CreateUserResult>.FromSuccess(result, (int) HttpStatusCode.Created);
         return Created(HttpContext.Request.GetDisplayUrl(), response);
     }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(typeof(ApiResponse<UpdateUserCommand>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateUser([FromRoute] string id, [FromBody] UpdateUserCommand request) {
+        request.UserId = id;
+        UpdateUserResult result = await _mediator.Send(request);
+        return Ok(ApiResponse<UpdateUserResult>.FromSuccess(result));
+    }
+
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(ApiResponse<DeleteUserCommand>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DeleteUser([FromRoute] string id) {
+        DeleteUserCommand command = new(id);
+        DeleteUserResult result = await _mediator.Send(command);
+        return Ok(ApiResponse<DeleteUserResult>.FromSuccess(result));
+    }
+
 }

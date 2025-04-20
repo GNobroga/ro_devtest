@@ -14,5 +14,7 @@ public class BadRequestException : ApiException {
     public override HttpStatusCode StatusCode => HttpStatusCode.BadRequest;
     public BadRequestException(IdentityResult result) : base(result) { }
     public BadRequestException(string error) : base(error) { }
+
+    public BadRequestException(IEnumerable<string> errors) : base(errors) {}
     public BadRequestException(ValidationResult validationResult) : base(validationResult) { }
 }

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using RO.DevTest.Application.Contracts.Infrastructure;
 using RO.DevTest.Domain.Entities;
 using RO.DevTest.Domain.Enums;
+using RO.DevTest.Domain.Exception;
 
 namespace RO.DevTest.Infrastructure.Abstractions;
 
@@ -33,6 +35,27 @@ public class IdentityAbstractor : IIdentityAbstractor {
 
     public async Task<IList<string>> GetUserRolesAsync(User user) => await _userManager.GetRolesAsync(user);
 
+    public async Task<IdentityResult> ResetUserPasswordAsync(User user, string newPassword) {
+        if(string.IsNullOrEmpty(newPassword)) {
+            throw new ArgumentException($"{nameof(newPassword)} cannot be null or empty", nameof(newPassword));
+        }
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+        
+        return result;
+    }
+
+    public async Task<IdentityResult> UpdateUserAsync(User user) {
+        if (user is null) {
+            throw new ArgumentNullException(nameof(user), "User cannot be null");
+        }
+
+        var result = await _userManager.UpdateAsync(user);
+
+        return result;
+    }
+
     public async Task<IdentityResult> CreateUserAsync(User partnerUser, string password) {
         if(string.IsNullOrEmpty(password)) {
             throw new ArgumentException($"{nameof(password)} cannot be null or empty", nameof(password));
@@ -44,6 +67,23 @@ public class IdentityAbstractor : IIdentityAbstractor {
 
         return await _userManager.CreateAsync(partnerUser, password);
     }
+
+    public async Task<bool> RemoveRolesFromUser(User user) {
+        if (user is null) {
+            throw new ArgumentNullException( nameof(user), "User cannot be null");
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        if (!roles.Any()) 
+            return false;
+       
+        var result = await _userManager.RemoveFromRolesAsync(user, roles);
+
+        return result.Succeeded;
+
+    }
+
     public async Task<SignInResult> PasswordSignInAsync(User user, string password)
         => await _signInManager.PasswordSignInAsync(user, password, false, false);
 

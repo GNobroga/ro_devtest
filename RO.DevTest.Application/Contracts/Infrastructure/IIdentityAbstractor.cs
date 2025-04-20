@@ -110,4 +110,44 @@ public interface IIdentityAbstractor {
     /// A <see cref="Task{IdentityResult}"/>
     /// </returns>
     Task<IdentityResult> DeleteUser(User user);
+
+
+    /// <summary>
+    /// Resets the password of the specified <see cref="User"/> using a generated reset token.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> whose password will be reset.
+    /// </param>
+    /// <param name="newPassword">
+    /// The new password to be set for the user.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Task{Boolean}"/> indicating whether the password reset was successful.
+    /// </returns>
+    Task<IdentityResult> ResetUserPasswordAsync(User user, string newPassword);
+
+    /// <summary>
+    /// Updates the specified <see cref="User"/> in the database.
+    /// </summary>
+    /// <param name="user">
+    /// The <see cref="User"/> entity with updated information to be saved.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Task{IdentityResult}"/> indicating whether the update operation succeeded.
+    /// </returns>
+    Task<IdentityResult> UpdateUserAsync(User user);
+
+    /// <summary>
+    /// Removes all roles assigned to the specified user.
+    /// </summary>
+    /// <param name="user">The user from whom the roles will be removed.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. The task result contains 
+    /// <c>true</c> if any roles were removed successfully; otherwise, <c>false</c>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when the <paramref name="user"/> parameter is <c>null</c>.
+    /// </exception>
+    Task<bool> RemoveRolesFromUser(User user);
+
 }

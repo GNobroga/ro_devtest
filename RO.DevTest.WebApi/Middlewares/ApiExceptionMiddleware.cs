@@ -23,9 +23,9 @@ public class ApiExceptionMiddleware : IMiddleware {
         List<string> errors = [ex.Message];
         int statusCode = (int) HttpStatusCode.InternalServerError;
 
-         if (ex is BadRequestException badRequestException) {
-            errors = badRequestException.Errors ?? ["Invalid request"];
-            statusCode = (int) badRequestException.StatusCode;
+         if (ex is ApiException apiException) {
+            errors = apiException.Errors ?? ["Invalid request"];
+            statusCode = (int) apiException.StatusCode;
         }
 
         return (statusCode, errors);

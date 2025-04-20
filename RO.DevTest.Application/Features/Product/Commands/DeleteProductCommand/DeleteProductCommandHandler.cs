@@ -11,7 +11,7 @@ public class DeleteProductCommandHandler(IProductRepository repository) : IReque
         var product = _repository.Get(product => product.Id == request.ProductId);
 
         if (product is null) 
-            return new DeleteProductResult(request.ProductId, false);
+            return DeleteProductResult.Failure(request.ProductId);
         
         await _repository.DeleteAsync(product);
 

@@ -26,6 +26,17 @@ public abstract class ApiException : System.Exception {
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="ApiException"/> class.
+    /// </summary>
+    /// <param name="errors">A collection of error messages that describe the exception.</param>
+    /// <remarks>
+    /// The constructor initializes the <see cref="Errors"/> property with the provided error messages.
+    /// </remarks>
+    protected ApiException(IEnumerable<string> errors) : base() {
+        Errors = [..errors];
+    }
+
+    /// <summary>
     /// Initializes a new <see cref="ApiException"/>
     /// </summary>
     /// <param name="validationResult">

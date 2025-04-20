@@ -20,7 +20,10 @@ public class CreateUserCommandHandler(IIdentityAbstractor identityAbstractor) : 
             throw new BadRequestException(validationResult);
         }
 
+        await ThrowIfEmailAlreadyExistsAsync(request.Email);
+
         Domain.Entities.User newUser = request.AssignTo();
+        
         IdentityResult userCreationResult = await _identityAbstractor.CreateUserAsync(newUser, request.Password);
         if(!userCreationResult.Succeeded) {
             throw new BadRequestException(userCreationResult);
@@ -32,5 +35,11 @@ public class CreateUserCommandHandler(IIdentityAbstractor identityAbstractor) : 
         }
 
         return new CreateUserResult(newUser);
+    }
+
+    private async Task ThrowIfEmailAlreadyExistsAsync(string email) {
+        var existingUser = await _identityAbstractor.FindUserByEmailAsync(email);
+        if (existingUser is not null) 
+            throw new ConflictException("O e-mail já está em uso");
     }
 }
