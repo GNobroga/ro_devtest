@@ -11,4 +11,12 @@ public class OrderProduct : BaseEntity {
     public Order Order { get; set; } = default!;
 
     public int Quantity { get; set; } = 1;
+
+    public OrderProduct() {}
+
+    public OrderProduct(Guid productId, Guid orderId, int quantity) {
+        OrderId = orderId;
+        ProductId = productId;
+        Quantity = quantity;
+    }
 }

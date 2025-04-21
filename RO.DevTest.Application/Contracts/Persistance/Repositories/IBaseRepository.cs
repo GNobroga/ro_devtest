@@ -37,11 +37,25 @@ public interface IBaseRepository<T> where T : class {
     Task DeleteAsync(T entity);
 
     /// <summary>
-    /// Obtém uma lista de resultadps paginados e ordenados com base nos filtros fornecidos.
+    /// Retrieves a paginated and sorted list of results based on the provided filters.
     /// </summary>
-    /// <typeparam name="T">O tipo da entidade que será retornada na consulta.</typeparam>
-    /// <param name="filter">Um objeto contendo as informações de filtro, como paginação, ordenação e critérios de busca.</param>
-    /// <param name="properties">Um array de strings contendo os nomes das propriedades pelas quais os resultados devem ser ordenados. A ordem das propriedades no array será a ordem de ordenação.</param>
-    /// <returns>Uma tarefa assíncrona que retorna uma lista de objetos do tipo T, após aplicar os filtros, a paginação e a ordenação.</returns>
+    /// <typeparam name="T">The type of the entity that will be returned in the query.</typeparam>
+    /// <param name="filter">An object containing filtering information such as pagination, sorting, and search criteria.</param>
+    /// <param name="properties">An array of strings containing the property names to sort the results by. The order of the array determines the sorting priority.</param>
+    /// <returns>
+    /// An asynchronous task that returns a <see cref="PageResult{T}"/> containing the filtered, paginated, and sorted list of entities.
+    /// </returns>
     Task<PageResult<T>> GetPagedAndSortedResultsAsync(PagedFilter filter, params string[] properties);
+
+
+
+    /// <summary>
+    /// Asynchronously checks whether there is at least one entity that matches the specified condition.
+    /// </summary>
+    /// <param name="predicate">A lambda expression that defines the condition to evaluate.</param>
+    /// <returns>
+    /// A <see cref="Task{Boolean}"/> representing the asynchronous operation. 
+    /// The result is <c>true</c> if any entity satisfies the predicate; otherwise, <c>false</c>.
+    /// </returns>
+    Task<bool> ExistsBy(Expression<Func<T, bool>> predicate);
 }

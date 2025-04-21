@@ -2,4 +2,6 @@
 
 namespace RO.DevTest.Application.Contracts.Persistance.Repositories;
 
-public interface IUserRepository : IBaseRepository<User> { }
+public interface IUserRepository : IBaseRepository<User> { 
+    Task<bool> ExistsById(string id);
+}

@@ -5,4 +5,6 @@ public abstract class BaseEntity {
     public DateTime ModifiedOn { get; set; }
 
     protected BaseEntity() { }
+
+    protected BaseEntity(Guid id) => Id = id;
 }

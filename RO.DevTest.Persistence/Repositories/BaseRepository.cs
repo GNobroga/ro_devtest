@@ -36,6 +36,8 @@ public class BaseRepository<T>(DefaultContext defaultContext) : IBaseRepository<
         await Context.SaveChangesAsync();
     }
 
+    public Task<bool> ExistsBy(Expression<Func<T, bool>> predicate) => Task.FromResult(Get(predicate) is not null);
+
     public async Task DeleteAsync(T entity) {
         Entities.Remove(entity);
         await Context.SaveChangesAsync();

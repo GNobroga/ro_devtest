@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using RO.DevTest.Domain.Abstract;
 using RO.DevTest.Domain.Enums;
 
@@ -14,4 +15,9 @@ public class Order : BaseEntity {
     public ICollection<OrderProduct> OrderProducts { get; set;} = default!;
 
     public List<Product> Products => OrderProducts is null ? [] : OrderProducts.Select(item => item.Product).ToList();
+
+    public void AddOrderProduct(OrderProduct item) {
+        OrderProducts ??= [];
+        OrderProducts.Add(item);
+    }
 }
