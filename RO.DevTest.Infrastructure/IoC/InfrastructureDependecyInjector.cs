@@ -25,13 +25,26 @@ public static class InfrastructureDependecyInjector {
     /// </returns>
     public static IServiceCollection InjectInfrastructureDependencies(this IServiceCollection services, IConfiguration configuration) {
         ConfigureIdentity(services);
-
-        services.AddScoped<IIdentityAbstractor, IdentityAbstractor>();
-        services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddSingleton<ITokenService, TokenService>();
-
-        services.Configure<JwtSettings>(configuration.GetRequiredSection("Jwt"));
+        AddRepositories(services);
+        AddServices(services);
+        AddSettings(services, configuration);
         return services;
+    }
+
+    public static void AddSettings(this IServiceCollection services, IConfiguration configuration) {
+        services.Configure<JwtSettings>(configuration.GetRequiredSection("Jwt"));
+    }
+
+    public static void AddServices(this IServiceCollection services) {
+        services.AddScoped<IIdentityAbstractor, IdentityAbstractor>();
+        services.AddSingleton<ITokenService, TokenService>();
+    }
+    
+    public static void AddRepositories(IServiceCollection services) {
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IOrderProductRepository, OrderProductRepository>();
     }
 
     public static void ConfigureIdentity(IServiceCollection services) {

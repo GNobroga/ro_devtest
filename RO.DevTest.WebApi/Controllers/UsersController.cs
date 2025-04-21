@@ -7,6 +7,8 @@ using NSwag.Annotations;
 using RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 using RO.DevTest.Application.Features.User.Commands.DeleteUserCommand;
 using RO.DevTest.Application.Features.User.Commands.UpdateUserCommand;
+using RO.DevTest.Application.Features.User.Queries.GetPagedUsersQuery;
+using RO.DevTest.Domain.Enums;
 using RO.DevTest.Domain.Models;
 
 namespace RO.DevTest.WebApi.Controllers;
@@ -16,11 +18,24 @@ namespace RO.DevTest.WebApi.Controllers;
 public class UsersController(IMediator mediator) : Controller {
     private readonly IMediator _mediator = mediator;
 
+    private readonly string[] searchFields = [
+        "UserName",
+        "Name",
+        "Email"
+    ];
+
+    [Authorize(Roles = nameof(UserRoles.Admin))]
+    [HttpGet]
+    public async Task<IActionResult> GetUsers([FromQuery] PagedFilter filter) {
+        var result = await _mediator.Send(new GetPagedUsersQuery(filter, searchFields));
+        return Ok(ApiResponse<PageResult<GetPagedUsersResult>>.FromSuccess(result));
+    }
+
     [HttpPost("admin")]
     [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateAdminUser([FromBody] CreateUserCommand request) {
-        request.Role = Domain.Enums.UserRoles.Admin;
+        request.Role = UserRoles.Admin;
         return await CreateUser(request);
     }
 
@@ -28,7 +43,7 @@ public class UsersController(IMediator mediator) : Controller {
     [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(CreateUserResult), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateCustomerUser([FromBody] CreateUserCommand request) {
-        request.Role = Domain.Enums.UserRoles.Customer;
+        request.Role = UserRoles.Customer;
         return await CreateUser(request);
     }
    
@@ -38,6 +53,7 @@ public class UsersController(IMediator mediator) : Controller {
         return Created(HttpContext.Request.GetDisplayUrl(), response);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(ApiResponse<UpdateUserCommand>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -48,7 +64,7 @@ public class UsersController(IMediator mediator) : Controller {
         return Ok(ApiResponse<UpdateUserResult>.FromSuccess(result));
     }
 
-
+    [Authorize]
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(ApiResponse<DeleteUserCommand>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]

@@ -12,6 +12,7 @@ using RO.DevTest.Application.Features.Product.Commands.DeleteProductCommand;
 using RO.DevTest.Application.Features.Product.Commands.UpdateProductCommand;
 using RO.DevTest.Application.Features.Queries.GetPagedProductsQuery;
 using RO.DevTest.Application.Features.Queries.GetProductByIdQuery;
+using RO.DevTest.Domain.Enums;
 using RO.DevTest.Domain.Models;
 
 namespace RO.DevTest.WebApi.Controllers;
@@ -28,6 +29,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
         "Description"
     ];
 
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(ApiResponse<PageResult<GetPagedProductsResult>>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
@@ -38,7 +40,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
         return Ok(response);
     }
 
-    [Authorize()]
+    [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ApiResponse<GetProductByIdResult>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -48,7 +50,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
         return Ok(ApiResponse<GetProductByIdResult>.FromSuccess(result));
     }
 
-    [Authorize(Roles = "Customer")]
+    [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(ApiResponse<DeleteProductResult>), StatusCodes.Status200OK)]
     public async Task<IActionResult> DeleteProductById(Guid id) {
@@ -58,6 +60,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
         return Ok(ApiResponse<DeleteProductResult>.FromSuccess(result));
     }
     
+    [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<CreateProductResult>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -68,7 +71,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
        return CreatedAtAction(nameof(GetProductById), new { id = productId }, response); 
     }
 
-
+    [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(ApiResponse<CreateProductResult>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
