@@ -12,11 +12,20 @@ namespace RO.DevTest.WebApi.Extensions;
 public static class JwtAuthenticationExtensions {
 
     private const string ForbiddenErrorMessage = "O usuário não tem permissões suficientes para acessar este recurso";
+    private const string AuthenticationErrorMessage = "Token expirado ou invalido";
 
     private static readonly Func<ForbiddenContext, Task> HandleOnForbidden = context => {
         int statusCode = (int) HttpStatusCode.Unauthorized;
         context.Response.StatusCode = statusCode;
         var response = ApiResponse<object>.FromFailure(statusCode, ForbiddenErrorMessage);
+        context.Response.WriteAsJsonAsync(response);
+        return Task.CompletedTask;
+    };
+
+    private static readonly Func<AuthenticationFailedContext, Task> HandleAuthenticationFailed = context => {
+        int statusCode = (int) HttpStatusCode.Unauthorized;
+        context.Response.StatusCode = statusCode;
+        var response = ApiResponse<object>.FromFailure(statusCode, AuthenticationErrorMessage);
         context.Response.WriteAsJsonAsync(response);
         return Task.CompletedTask;
     };
@@ -45,7 +54,8 @@ public static class JwtAuthenticationExtensions {
             };
 
             options.Events = new JwtBearerEvents {
-               OnForbidden = HandleOnForbidden
+               OnForbidden = HandleOnForbidden,
+               OnAuthenticationFailed = HandleAuthenticationFailed
             };
         });
 

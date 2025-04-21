@@ -1,9 +1,9 @@
 using FluentValidation;
 
-namespace RO.DevTest.Application.Features.Order.Commands.CreateOrderCommand;
+namespace RO.DevTest.Application.Features.Order.Commands.CreateOrUpdateOrderCommand;
 
-public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand> {
-    public CreateOrderCommandValidator() {
+public class CreateOrUpdateOrderCommandValidator : AbstractValidator<CreateOrUpdateOrderCommand> {
+    public CreateOrUpdateOrderCommandValidator() {
         RuleFor(o => o.Items)
             .NotEmpty()
             .WithMessage("É necessário ter pelo menos um item no pedido")

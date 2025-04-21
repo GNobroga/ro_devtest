@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using RO.DevTest.Domain.Enums;
 
-namespace RO.DevTest.Application.Features.Product.Commands.CreateProductCommand;
+namespace RO.DevTest.Application.Features.Order.Commands.CreateOrUpdateOrderCommand;
 public record OrderProductDTO(
     Guid Id,
     string Name,
@@ -16,7 +16,7 @@ public record UserDTO(
     string Email
 );
 
-public class CreateOrderResult(DateTime placedAt, OrderStatus status, decimal total, UserDTO user, List<OrderProductDTO> items) {
+public class CreateOrUpdateOrderResult(DateTime placedAt, OrderStatus status, decimal total, UserDTO user, List<OrderProductDTO> items) {
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderStatus Status { get; set; } = status;
@@ -26,7 +26,7 @@ public class CreateOrderResult(DateTime placedAt, OrderStatus status, decimal to
     public UserDTO User { get; set; } = user;
     public List<OrderProductDTO> Items  { get; set; } = items;
 
-    public static CreateOrderResult FromOrder(Domain.Entities.Order order) {
+    public static CreateOrUpdateOrderResult FromOrder(Domain.Entities.Order order) {
         DateTime placedAt = order.CreatedOn;
         UserDTO user = new(order.User.Id, order.User.Name, order.User.Email!);
 
@@ -38,7 +38,7 @@ public class CreateOrderResult(DateTime placedAt, OrderStatus status, decimal to
 
         decimal total = items.Aggregate((decimal) 0, (acc, curr) =>  acc + (curr.Price * curr.Quantity));
   
-        return new CreateOrderResult(placedAt, order.Status, total, user, items);
+        return new CreateOrUpdateOrderResult(placedAt, order.Status, total, user, items);
     }
 
    
