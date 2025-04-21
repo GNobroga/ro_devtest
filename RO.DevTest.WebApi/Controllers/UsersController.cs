@@ -18,7 +18,7 @@ namespace RO.DevTest.WebApi.Controllers;
 public class UsersController(IMediator mediator) : Controller {
     private readonly IMediator _mediator = mediator;
 
-    private readonly string[] searchFields = [
+    private static readonly string[] SearchFields = [
         "UserName",
         "Name",
         "Email"
@@ -27,7 +27,7 @@ public class UsersController(IMediator mediator) : Controller {
     [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpGet]
     public async Task<IActionResult> GetUsers([FromQuery] PagedFilter filter) {
-        var result = await _mediator.Send(new GetPagedUsersQuery(filter, searchFields));
+        var result = await _mediator.Send(new GetPagedUsersQuery(filter, SearchFields));
         return Ok(ApiResponse<PageResult<GetPagedUsersResult>>.FromSuccess(result));
     }
 

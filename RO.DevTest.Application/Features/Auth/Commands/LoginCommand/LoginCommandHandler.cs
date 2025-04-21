@@ -4,9 +4,9 @@ using RO.DevTest.Domain.Exception;
 
 namespace RO.DevTest.Application.Features.Auth.Commands.LoginCommand;
 
-public class LoginCommandHandler(ITokenService tokenService, IIdentityAbstractor identityAbstractor) : IRequestHandler<LoginCommand, LoginResponse> {
+public class LoginCommandHandler(IUserTokenService userTokenService, IIdentityAbstractor identityAbstractor) : IRequestHandler<LoginCommand, LoginResponse> {
     
-    private readonly ITokenService _tokenService = tokenService;
+    private readonly IUserTokenService _userTokenService = userTokenService;
     private readonly IIdentityAbstractor _identityAbstractor = identityAbstractor;
     
     public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken) {
@@ -20,7 +20,7 @@ public class LoginCommandHandler(ITokenService tokenService, IIdentityAbstractor
         }
 
         var userRoles = await _identityAbstractor.GetUserRolesAsync(user);
-        TokenInfo tokenInfo = _tokenService.GenerateJwtForUser(user, userRoles.ToList());
+        TokenInfo tokenInfo = _userTokenService.GenerateJwtForUser(user, userRoles.ToList());
         return LoginResponse.FromTokenInfo(tokenInfo);
     }
 }

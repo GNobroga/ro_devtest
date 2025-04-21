@@ -1,31 +1,37 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using RO.DevTest.Domain.Enums;
 using RO.DevTest.Domain.Models;
 
 namespace RO.DevTest.Persistence.Extensions;
 
 public static class IQueryableExtensions {
 
-    public static IQueryable<T> WhereContainsIgnoreCaseMultiple<T>(this IQueryable<T> query, object value, params string[] properties) {
+    public static IQueryable<T> WhereContainsIgnoreCaseMultiple<T>(this IQueryable<T> query, object value, IEnumerable<string> properties) {
+        if (!properties.Any()) 
+            return query;
+
         var parameter = Expression.Parameter(typeof(T), "e");
 
+
         var bodyExpressions = properties.Select(property => {
-            Expression propertyExpression = Expression.Property(parameter, property);
+            Expression propertyExpression = parameter;
+
+            foreach (var member in property.Split('.')) {
+                propertyExpression = Expression.PropertyOrField(propertyExpression, member);
+            }
 
             if (propertyExpression.Type != typeof(string)) {
-                propertyExpression =  Expression.Call(propertyExpression, "ToString", null);
+                propertyExpression =  Expression.Call(propertyExpression, "ToString", Type.EmptyTypes);
             }
             
             var containsMethod = typeof(string).GetMethod("Contains", [typeof(string)])!;
             var constantValue = Expression.Constant(value.ToString(), typeof(string));
+
+            var toLowerProperty = Expression.Call(propertyExpression, nameof(string.ToLower), Type.EmptyTypes);
+            var toLowerConstant = Expression.Call(constantValue, nameof(string.ToLower), Type.EmptyTypes);
             
-            var callContains = Expression.Call(
-                Expression.Call(propertyExpression, "ToLower", null),
-                containsMethod,
-                Expression.Call(constantValue, "ToLower", null)
-            );
-            
-            return callContains;
+            return Expression.Call(toLowerProperty, containsMethod, toLowerConstant);
         });
      
         var combinedBody = bodyExpressions.Cast<Expression>().Aggregate(Expression.OrElse);

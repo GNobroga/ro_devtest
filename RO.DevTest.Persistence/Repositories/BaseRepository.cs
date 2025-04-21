@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using RO.DevTest.Application.Contracts.Persistance.Repositories;
 using RO.DevTest.Domain.Models;
 using RO.DevTest.Persistence.Extensions;
@@ -13,15 +14,33 @@ public class BaseRepository<T>(DefaultContext defaultContext) : IBaseRepository<
 
     protected DbSet<T> Entities => Context.Set<T>();
 
-    public async Task<PageResult<T>> GetPagedAndSortedResultsAsync(PagedFilter filter, params string[] properties) {
-        var baseQuery = Entities.WhereContainsIgnoreCaseMultiple(filter.Keyword, properties).AsNoTracking();
+    public async Task<PageResult<T>> GetPagedAndSortedResultsAsync(
+        PagedFilter filter, 
+        IEnumerable<string>? properties = default, 
+        Expression<Func<T, bool>>? baseFilter = default,
+        IEnumerable<Func<IQueryable<T>, IIncludableQueryable<T, object>>>? includes = default
+    ) {
+        properties ??= [];
+        baseFilter ??= e => true;
+        includes ??= [];
+
+        var baseQuery = Entities.WhereContainsIgnoreCaseMultiple(filter.Keyword, properties)
+            .Where(baseFilter)
+            .AsNoTracking();
+
+        foreach(var include in includes) {
+            baseQuery = include(baseQuery);
+        }
+
         var page = filter.Page;
         var pageSize = filter.PageSize;
         var totalItems = await baseQuery.CountAsync();
+
         var results = await baseQuery
-            .Paginate(page, pageSize)
             .OrderByProperty(filter.SortBy, filter.IsSortOrderAscending)
+            .Paginate(page, pageSize)
             .ToListAsync();
+
         return new PageResult<T>(page, pageSize, totalItems, results);
     }
 

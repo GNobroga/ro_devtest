@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Query;
 using RO.DevTest.Domain.Models;
 
 namespace RO.DevTest.Application.Contracts.Persistance.Repositories;
@@ -37,16 +38,18 @@ public interface IBaseRepository<T> where T : class {
     Task DeleteAsync(T entity);
 
     /// <summary>
-    /// Retrieves a paginated and sorted list of results based on the provided filters.
+    /// Retrieves a paginated and sorted list of entities based on the specified filter criteria.
     /// </summary>
-    /// <typeparam name="T">The type of the entity that will be returned in the query.</typeparam>
-    /// <param name="filter">An object containing filtering information such as pagination, sorting, and search criteria.</param>
-    /// <param name="properties">An array of strings containing the property names to sort the results by. The order of the array determines the sorting priority.</param>
-    /// <returns>
-    /// An asynchronous task that returns a <see cref="PageResult{T}"/> containing the filtered, paginated, and sorted list of entities.
-    /// </returns>
-    Task<PageResult<T>> GetPagedAndSortedResultsAsync(PagedFilter filter, params string[] properties);
-
+    /// <typeparam name="T">The type of the entity being queried.</typeparam>
+    /// <param name="filter">The filter containing pagination, sorting, and search criteria.</param>
+    /// <param name="properties">The properties to sort the results by.</param>
+    /// <param name="includes">Optional related entities to include in the query.</param>
+    /// <returns>A paginated and sorted list of entities.</returns>
+    Task<PageResult<T>> GetPagedAndSortedResultsAsync(
+        PagedFilter filter, 
+        IEnumerable<string>? properties= default, 
+        Expression<Func<T, bool>>? baseFilter = default,
+        IEnumerable<Func<IQueryable<T>, IIncludableQueryable<T, object>>>? includes = default);
 
 
     /// <summary>

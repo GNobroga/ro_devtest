@@ -13,6 +13,9 @@ public class OrderConfiguration() : BaseConfiguration<Order>(TABLE_NAME) {
             .WithMany()
             .HasForeignKey(o => o.UserId);
 
+        builder.Property(o => o.Status)
+            .HasConversion<string>();
+
         builder.Ignore(o => o.Products);
     }
 

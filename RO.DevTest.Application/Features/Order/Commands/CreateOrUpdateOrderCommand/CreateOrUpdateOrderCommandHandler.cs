@@ -1,5 +1,7 @@
 using MediatR;
+using RO.DevTest.Application.Common.Mappers;
 using RO.DevTest.Application.Contracts.Persistance.Repositories;
+using RO.DevTest.Application.DTOs;
 using RO.DevTest.Application.Extensions;
 using RO.DevTest.Application.Features.Product.Commands.CreateProductCommand;
 using RO.DevTest.Domain.Entities;
@@ -14,17 +16,17 @@ public class CreateOrUpdateOrderCommandHandler(
     IUserRepository userRepository,
     IProductRepository productRepository
 
-) : IRequestHandler<CreateOrUpdateOrderCommand, CreateOrUpdateOrderResult> {
+) : IRequestHandler<CreateOrUpdateOrderCommand, OrderDTO> {
    
    private readonly IOrderRepository _repository = repository;
    private readonly IOrderProductRepository _orderProductRepository = orderProductRepository;
    private readonly IUserRepository _userRepository = userRepository;
    private readonly IProductRepository _productRepository = productRepository;
    
-    public async Task<CreateOrUpdateOrderResult> Handle(CreateOrUpdateOrderCommand request, CancellationToken cancellationToken) {
+    public async Task<OrderDTO> Handle(CreateOrUpdateOrderCommand request, CancellationToken cancellationToken) {
         await request.ThrowIfInvalidCommandAsync(new CreateOrUpdateOrderCommandValidator());
 
-        string userId = request.UserId;
+        string userId = request.UserId!;
         bool isUpdate = request.IsUpdated;
         bool existsUser = await _userRepository.ExistsById(userId);
 
@@ -54,7 +56,7 @@ public class CreateOrUpdateOrderCommandHandler(
 
         await _repository.CreateAsync(order, cancellationToken);
 
-        return CreateOrUpdateOrderResult.FromOrder(order);
+        return OrderMapper.ToDTO(order);
     }
 
     public async Task DeleteAllOrderProducts(Domain.Entities.Order order) {

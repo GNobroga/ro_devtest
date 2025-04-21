@@ -37,7 +37,7 @@ public static class InfrastructureDependecyInjector {
 
     public static void AddServices(this IServiceCollection services) {
         services.AddScoped<IIdentityAbstractor, IdentityAbstractor>();
-        services.AddSingleton<ITokenService, TokenService>();
+        services.AddSingleton<IUserTokenService, UserTokenService>();
         services.AddScoped<IAuthService, AuthService>();
     }
     

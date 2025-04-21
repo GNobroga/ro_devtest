@@ -23,7 +23,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
 
     private readonly IMediator _mediator = mediator;
 
-    private readonly string[] searchFields = [
+    private static readonly string[] SearchFields = [
         "Price",
         "Name",
         "Description"
@@ -34,7 +34,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
     [ProducesResponseType(typeof(ApiResponse<PageResult<GetPagedProductsResult>>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetProducts([FromQuery] PagedFilter filter) {
-        GetPagedProductsQuery query = new(filter, searchFields);
+        GetPagedProductsQuery query = new(filter, SearchFields);
         PageResult<GetPagedProductsResult> result = await _mediator.Send(query);
         var response = ApiResponse<PageResult<GetPagedProductsResult>>.FromSuccess(result);
         return Ok(response);
@@ -60,7 +60,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
         return Ok(ApiResponse<DeleteProductResult>.FromSuccess(result));
     }
     
-    [Authorize(Roles = nameof(UserRoles.Admin))]
+   // [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<CreateProductResult>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]

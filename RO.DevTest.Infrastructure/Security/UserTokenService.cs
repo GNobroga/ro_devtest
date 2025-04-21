@@ -12,7 +12,7 @@ namespace RO.DevTest.Infrastructure.Security;
     /// Implementa a interface <see cref="ITokenService"/> e fornece funcionalidades
     /// para a criação de tokens.
 /// </summary>
-public class TokenService : ITokenService {
+public class UserTokenService : IUserTokenService {
 
     private const int DefaultAccessTokenExpirationHours = 2;
     private const int DefaultRefreshTokenExpirationDays = 2;
@@ -20,7 +20,7 @@ public class TokenService : ITokenService {
     private record TokenResponse(string Token, DateTime IssuedAt, DateTime ExpirationDate);
     private readonly JwtSettings _jwtSettings;
 
-    public TokenService(IOptions<JwtSettings> jwtSettings) {
+    public UserTokenService(IOptions<JwtSettings> jwtSettings) {
         _jwtSettings = jwtSettings.Value; 
     }
     

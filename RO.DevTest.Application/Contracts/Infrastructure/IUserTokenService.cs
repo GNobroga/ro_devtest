@@ -10,6 +10,6 @@ public record TokenInfo(
     List<string> Roles
 ) {}
 
-public interface ITokenService {
+public interface IUserTokenService {
     TokenInfo GenerateJwtForUser(User user, List<string> roles);
 }
