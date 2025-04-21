@@ -33,16 +33,23 @@ public class CreateOrderCommandHandler(
             UserId = userId
         };
 
-        await VerifyAllProductsExistAsync(request.Items.Select(item => item.ProductId));
+        var productIds = request.Items.Select(item => item.ProductId).DistinctBy(id => id);
+        await VerifyAllProductsExistAsync(productIds);
 
-        foreach(var item in request.Items) {
+       var orderItems = request.Items
+            .GroupBy(item => item.ProductId)
+            .Select(group => new OrderItemDto {
+                ProductId = group.Key,
+                Quantity = group.Sum(i => i.Quantity)
+            })
+            .ToList();
+
+        foreach(var item in orderItems) {
             var product = new Domain.Entities.Product(item.ProductId);
             order.AddOrderProduct(new OrderProduct(item.ProductId, order.Id, item.Quantity));
         }
 
-        await _repository.CreateAsync(order);
-
-        order.Products.ForEach(product => Console.WriteLine(product.Name));
+        await _repository.CreateAsync(order, cancellationToken);
 
         return CreateOrderResult.FromOrder(order);
     }
