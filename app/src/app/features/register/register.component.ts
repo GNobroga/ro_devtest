@@ -20,9 +20,9 @@ export class RegisterComponent extends BaseFormComponent implements OnInit {
   protected override form = this.formBuilder.group({
     userName: ['', [Validators.required, Validators.minLength(6)]],
     name: ['', [Validators.required, Validators.minLength(6)]],
-    email: ['', [Validators.email]],
+    email: ['',[Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    passwordConfirmation: [''],
+    passwordConfirmation: ['', [Validators.required]],
   });
 
   constructor(
@@ -37,14 +37,13 @@ export class RegisterComponent extends BaseFormComponent implements OnInit {
   }
 
   register() {
-    this.userService.createUser(this.form.value as CreateUser, this.role.value!)
-      .subscribe(() => {
-        this.messageService.add({
-          severity: 'success',
-          detail: 'Conta criada com sucesso'
-        })
-        this.router.navigate(['/login']);
-      });
+    this.handleSubmit(() => {
+      this.userService.createUser(this.form.value as CreateUser, this.role.value!)
+        .subscribe(() => {
+          this.toastrService.success('Conta criada com sucesso');
+          this.router.navigate(['/login']);
+        });
+    });
   }
 
 }

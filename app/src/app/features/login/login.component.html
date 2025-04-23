@@ -1,6 +1,6 @@
 <div class="bg-brand-primary flex items-center justify-center min-h-screen p-10">
     <p-card styleClass="max-w-xl mx-auto" class="w-full">
-        <form class="p-5" [formGroup]="form">
+        <form class="p-5" [formGroup]="form" (ngSubmit)="login()">
             <div>
                 <div class="mb-5 flex flex-col items-center justify-center">
                     <h1 class="text-2xl font-bold">Bem vindo ao <span class="text-blue-700">Login</span></h1>
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <button pButton fluid class="mt-6">Entrar</button>
+            <button pButton fluid class="mt-6" [loading]="this.authService.isLoading()">Entrar</button>
             <span class="gap-1 mt-6 flex justify-center">
                 <p>Ainda não possui uma conta? </p>
                 <span routerLink="/register" class="font-semibold hover:underline cursor-pointer">Registre-se</span>

@@ -8,5 +8,9 @@ export const routes: Routes = [
     {
         path: 'register',
         loadChildren: () => import('./features/register/register.module'),
+    },
+    {
+        path: 'panel',
+        loadChildren: () => import('./features/panel/panel.module'),
     }
 ];

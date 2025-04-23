@@ -1,0 +1,117 @@
+
+<p-drawer styleClass="max-w-xs border-none"  
+    [(visible)]="drawerVisible" 
+    [closable]="false" 
+    [modal]="false" 
+    [dismissible]="false" 
+    [closeOnEscape]="false"
+>
+    <ng-template #header>
+        <div class="flex items-center">
+            <svg width="160" height="40" viewBox="0 0 160 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <text x="0" y="28" font-family="Segoe UI, sans-serif" font-size="28" font-weight="600" fill="#4F46E5">
+                Dev
+              </text>
+              <text x="55" y="28" font-family="Segoe UI, sans-serif" font-size="28" font-weight="600" fill="#9333EA">
+                Test
+              </text>
+            </svg>
+          </div>
+          
+    </ng-template>
+    <ng-template #content>
+        <ul class="list-none p-0 m-0 overflow-hidden">
+            <li>
+                <a pRipple class="flex bg-purple-600 !text-white items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
+                    <i class="pi pi-home mr-2"></i>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a pRipple class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
+                    <i class="pi pi-bookmark mr-2"></i>
+                    <span class="font-medium">Bookmarks</span>
+                </a>
+            </li>
+            <li>
+                <a
+                    pRipple
+                    pStyleClass="@next"
+                    enterFromClass="hidden"
+                    enterActiveClass="animate-slidedown"
+                    leaveToClass="hidden"
+                    leaveActiveClass="animate-slideup"
+                    class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                >
+                    <i class="pi pi-cog mr-2"></i>
+                    <span class="font-medium">Operações</span>
+                    <i class="pi pi-chevron-down ml-auto"></i>
+                </a>
+                <ul class="list-none py-0 pl-4 pr-0 m-0 overflow-y-hidden transition-all duration-[400ms] ease-in-out">
+                    <li>
+                        <a
+                            pRipple
+                            class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                        >
+                            <i class="pi pi-box mr-2"></i>
+                            <span class="font-medium">Produtos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            pRipple
+                            class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                        >
+                            <i class="pi pi-user mr-2"></i>
+                            <span class="font-medium">Clientes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            pRipple
+                            class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                        >
+                            <i class="pi pi-shopping-cart mr-2"></i>
+                            <span class="font-medium">Pedidos</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            </ul>
+    </ng-template>
+    <ng-template #footer>
+        <span class="text-sm">Desenvolvido por Gabriel Cardoso</span>
+    </ng-template>
+</p-drawer>
+
+<div [ngClass]="{'ms-80': drawerVisible }" class="flex flex-col h-full">
+
+    <p-toolbar class="w-full" styleClass="bg-brand-primary border-none !to-blue-600 !from-purple-700 rounded-none">
+        <ng-template #start>
+            <button 
+            pButton 
+                size="large"
+                [icon]="drawerVisible ? 'pi pi-times' : 'pi pi-bars'"
+                (click)="drawerVisible = !drawerVisible"
+                class="bg-transparent border-none"
+                aria-label="Alternar menu"
+            ></button>
+            
+        </ng-template>
+        <ng-template #center></ng-template>
+        <ng-template #end>
+        <div class="flex items-center">
+                <p-avatar label="G" styleClass="mr-2"  shape="circle" />
+                <span class="text-white">Gabriel Cardoso Girarde</span>
+                <p-button styleClass="ms-3 border-none bg-transparent" size="small" (click)="menu.toggle($event)" icon="pi pi-ellipsis-v"/>
+                <p-menu #menu [model]="items" [popup]="true"/>
+        </div>
+        </ng-template>
+    </p-toolbar>
+
+    <div class="p-5 bg-gray-100 flex-grow">
+        <router-outlet/>
+    </div>
+</div>
+

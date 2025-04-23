@@ -9,7 +9,6 @@ import { CoreModule } from './core/core.module';
   providers: [],
   template: `
     <router-outlet/>
-    <p-toast />
   `,
 })
 export class AppComponent {

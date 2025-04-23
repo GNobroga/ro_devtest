@@ -11,12 +11,12 @@ public class LoginCommandHandler(IUserTokenService userTokenService, IIdentityAb
     
     public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken) {
         var user = await _identityAbstractor.FindUserByUserNameAsync(request.Username)
-            ?? throw new BadRequestException("Username or password is invalid.");
+            ?? throw new BadRequestException("Usuário ou senha inválido");
     
         var signInResult = await _identityAbstractor.PasswordSignInAsync(user, request.Password);
 
         if (!signInResult.Succeeded) {
-            throw new BadRequestException("Username or password is invalid.");
+            throw new BadRequestException("Usuário ou senha inválido");
         }
 
         var userRoles = await _identityAbstractor.GetUserRolesAsync(user);

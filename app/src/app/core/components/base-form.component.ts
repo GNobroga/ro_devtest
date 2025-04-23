@@ -3,6 +3,7 @@ import { BaseModel } from "../models/base.model";
 import { inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/api";
+import { ToastrService } from "ngx-toastr";
 
 export abstract class BaseFormComponent {
     
@@ -12,7 +13,15 @@ export abstract class BaseFormComponent {
 
     protected router = inject(Router);
 
-    protected messageService = inject(MessageService);
+    protected toastrService = inject(ToastrService);
+
+    handleSubmit(callback: VoidFunction) {
+      if (this.form.invalid) {
+        this.form.markAllAsTouched();
+        return;
+      }
+      callback();
+    }
 
 
     getErrorMessage(controlName: string) {

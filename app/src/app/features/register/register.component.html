@@ -38,7 +38,7 @@
                     <div>
                         <span>
                             <p-floatlabel variant="on">
-                                <input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('password')}" formControlName="password" fluid pInputText autocomplete="off"/>
+                                <input type="password" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('password')}" formControlName="password" fluid pInputText autocomplete="off"/>
                                 <label for="on_label">Senha</label>
                             </p-floatlabel>
                             <p-message *ngIf="isFieldInvalid('password')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('password') }}</p-message>
@@ -47,7 +47,7 @@
                     <div>
                         <span>
                             <p-floatlabel variant="on">
-                                <input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('passwordConfirmation')}" formControlName="passwordConfirmation" fluid pInputText autocomplete="off"/>
+                                <input type="password" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('passwordConfirmation')}" formControlName="passwordConfirmation" fluid pInputText autocomplete="off"/>
                                 <label for="on_label">Senha de Confirmação</label>
                             </p-floatlabel>
                             <p-message *ngIf="isFieldInvalid('passwordConfirmation')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('passwordConfirmation') }}</p-message>
@@ -68,7 +68,7 @@
                     
                 </span>
             </div>
-            <button type="submit" pButton fluid class="mt-6">Cadastrar-se</button>
+            <button pButton fluid class="mt-6">Cadastrar-se</button>
             <span class="gap-1 mt-6 flex justify-center">
                 <p>Já possui uma conta? </p>
                 <span routerLink="/login" class="font-semibold hover:underline cursor-pointer">Faça Login</span>
@@ -77,3 +77,4 @@
     </p-card>
 </div>
 
+<!-- <p-toast/> -->

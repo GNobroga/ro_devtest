@@ -23,7 +23,9 @@ export class LoginComponent extends BaseFormComponent {
   }
 
   login() {
-    this.authService.login(this.form.value as LoginCredentials) 
-      .subscribe();
+    this.handleSubmit(() => {
+        this.authService.login(this.form.value as LoginCredentials) 
+          .subscribe();
+    });
   }
 }
