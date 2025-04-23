@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-profile',
@@ -8,4 +9,16 @@ import { Component } from '@angular/core';
 })
 export class ProfileComponent {
 
+  breadcrumbs: MenuItem[] = [
+    {
+      label: 'Dashboard',
+      icon: 'pi pi-home',
+      routerLink: '/panel'
+    },
+    {
+      label: 'Perfil',
+      icon: 'pi pi-user',
+    }
+  ];
+  
 }

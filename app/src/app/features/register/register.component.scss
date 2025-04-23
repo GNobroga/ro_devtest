@@ -1,3 +1,9 @@
 label {
     @apply font-normal;
 }
+
+::ng-deep {
+    .p-card-body {
+        @apply p-0 pb-10;
+    }
+}

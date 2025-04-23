@@ -15,6 +15,7 @@ export class PanelComponent {
     {
       label: 'Perfil',
       icon: 'pi pi-user',
+      routerLink: '/panel/profile',
     },
     {
       label: 'Sair',

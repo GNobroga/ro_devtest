@@ -1,59 +1,156 @@
-<div class="px-6">
-    <p-breadcrumb [model]="breadcrumbs" styleClass="bg-transparent"/>
-    <div class="mb-6 shadow-lg">
-        <div class="flex items-center gap-6 bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+<div class="px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto">
+    <!-- Breadcrumb estilizado -->
+    <div class="mb-6 flex justify-between items-center">
+        <p-breadcrumb [model]="breadcrumbs" styleClass="border-none bg-white rounded-lg px-4 py-2 shadow-sm" />
+    </div>
+
+    <!-- Filtros de data com estilo aprimorado -->
+    <div class="mb-8 bg-white p-5 rounded-xl shadow-md border border-gray-100">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+            <i class="pi pi-filter mr-2 text-blue-500"></i>
+            Filtrar por período
+        </h3>
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
             <!-- Data Início -->
-            <div class="flex flex-col">
-                <label class="text-sm text-gray-600 font-medium mb-1">Data Início: </label>
-                <p-datepicker  placeholder="Selecione" size="small"></p-datepicker>
+            <div class="flex-1 w-full ">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Data Início</label>
+                <div class="relative">
+                    <p-datepicker 
+                        placeholder="Selecione a data inicial" 
+                        inputId="range_start"
+                        [showIcon]="true" 
+                        icon="pi pi-calendar"
+                        class="w-full"
+                        [inputStyle]="{'padding-left': '2.5rem'}"
+                        [panelStyleClass]="'shadow-lg'">
+                    </p-datepicker>
+                    <i class="pi pi-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
             </div>
-    
+
             <!-- Data Fim -->
-            <div class="flex flex-col">
-                <label class="text-sm text-gray-600 font-medium mb-1">Data Fim: </label>
-                <p-datepicker placeholder="Selecione" size="small"></p-datepicker>
-            </div>
-        </div>
-    </div>
-    
-    
-    <!-- Cards -->
-    <div class="rounded-2xl">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Pedidos Card -->
-            <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200">
-                <div class="flex items-center mb-4">
-                    <div class="bg-indigo-100 text-indigo-600 p-3 rounded-full">
-                        <i class="pi pi-box text-xl"></i>
-                    </div>
-                    <h3 class="ml-4 text-xl font-bold text-gray-800">Pedidos</h3>
+            <div class="flex-1 w-full">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Data Fim</label>
+                <div class="relative">
+                    <p-datepicker 
+                        placeholder="Selecione a data final" 
+                        inputId="range_end"
+                        [showIcon]="true" 
+                        icon="pi pi-calendar"
+                        class="w-full"
+                        [inputStyle]="{'padding-left': '2.5rem'}"
+                        [panelStyleClass]="'shadow-lg'">
+                    </p-datepicker>
+                    <i class="pi pi-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 </div>
-                <p class="text-3xl font-extrabold text-indigo-700">500</p>
-                <p class="mt-2 text-sm text-gray-500">Total de pedidos realizados</p>
             </div>
 
-            <!-- Receita Card -->
-            <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200">
-                <div class="flex items-center mb-4">
-                    <div class="bg-emerald-100 text-emerald-600 p-3 rounded-full">
-                        <i class="pi pi-dollar text-xl"></i>
-                    </div>
-                    <h3 class="ml-4 text-xl font-bold text-gray-800">Receita</h3>
-                </div>
-                <p class="text-3xl font-extrabold text-emerald-700">R$ 500</p>
-                <p class="mt-2 text-sm text-gray-500">Receita total gerada</p>
+            <!-- Botão de ação -->
+            <div class="self-end sm:self-center">
+                <button pButton type="button" label="Aplicar Filtros" icon="pi pi-check"
+                        class="!px-5 py-2.5 bg-blue-600 hover:!bg-blue-700 mt-6 sm:mt-0"></button>
             </div>
         </div>
     </div>
 
-    <!-- Gráfico -->
-    <div class="bg-white mt-10 p-6 rounded-2xl shadow-md">
-        <h4 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-            <i class="pi pi-chart-bar mr-2 text-xl text-blue-500"></i>
-            <span class="text-xl font-bold text-gray-800">Produtos Vendidos</span>
-        </h4>
-        <div class="w-full overflow-x-auto">
-            <p-chart type="bar" [data]="productData" class="w-full min-w-[300px] md:min-w-[600px]"></p-chart>
+    <span class="font-medium">Cards de métricas</span>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-2">
+        <!-- Pedidos Card -->
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-l-4 border-indigo-500">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Pedidos</p>
+                    <p class="mt-2 text-3xl font-bold text-gray-900">1,257</p>
+                    <p class="mt-1 text-sm text-gray-500">
+                        <span class="text-green-600 font-semibold">+12.5%</span> vs período anterior
+                    </p>
+                </div>
+                <div class="bg-indigo-100 text-indigo-600 p-3 rounded-lg">
+                    <i class="pi pi-shopping-cart text-2xl"></i>
+                </div>
+            </div>
+            <div class="mt-4">
+                <!-- <p-chart type="line" [data]="miniChartData" [options]="miniChartOptions" height="50px"></p-chart> -->
+            </div>
+        </div>
+
+        <!-- Receita Card -->
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-l-4 border-emerald-500">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Receita</p>
+                    <p class="mt-2 text-3xl font-bold text-gray-900">R$ 48,257</p>
+                    <p class="mt-1 text-sm text-gray-500">
+                        <span class="text-green-600 font-semibold">+8.2%</span> vs período anterior
+                    </p>
+                </div>
+                <div class="bg-emerald-100 text-emerald-600 p-3 rounded-lg">
+                    <i class="pi pi-wallet text-2xl"></i>
+                </div>
+            </div>
+            <div class="mt-4">
+                <!-- <p-chart type="line" [data]="miniChartData2" [options]="miniChartOptions" height="50px"></p-chart> -->
+            </div>
+        </div>
+
+        <!-- Clientes Card -->
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-l-4 border-amber-500">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Clientes</p>
+                    <p class="mt-2 text-3xl font-bold text-gray-900">342</p>
+                    <p class="mt-1 text-sm text-gray-500">
+                        <span class="text-green-600 font-semibold">+5.3%</span> novos clientes
+                    </p>
+                </div>
+                <div class="bg-amber-100 text-amber-600 p-3 rounded-lg">
+                    <i class="pi pi-users text-2xl"></i>
+                </div>
+            </div>
+            <div class="mt-4">
+                <!-- <p-chart type="line" [data]="miniChartData3" [options]="miniChartOptions" height="50px"></p-chart> -->
+            </div>
+        </div>
+
+        <!-- Ticket Médio -->
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-l-4 border-purple-500">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Ticket Médio</p>
+                    <p class="mt-2 text-3xl font-bold text-gray-900">R$ 142</p>
+                    <p class="mt-1 text-sm text-gray-500">
+                        <span class="text-red-600 font-semibold">-2.1%</span> vs período anterior
+                    </p>
+                </div>
+                <div class="bg-purple-100 text-purple-600 p-3 rounded-lg">
+                    <i class="pi pi-tag text-2xl"></i>
+                </div>
+            </div>
+            <div class="mt-4">
+                <!-- <p-chart type="line" [data]="miniChartData4" [options]="miniChartOptions" height="50px"></p-chart> -->
+            </div>
         </div>
     </div>
-</div> 
+
+    <!-- Gráficos principais -->
+    <div class="grid grid-cols-1  gap-6 mb-8">
+        <!-- Gráfico de produtos vendidos -->
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <div class="flex justify-between items-center mb-6">
+                <h4 class="text-lg font-semibold text-gray-800 flex items-center">
+                    <i class="pi pi-chart-bar mr-2 text-xl text-blue-500"></i>
+                    Produtos Mais Vendidos
+                </h4>
+
+            </div>
+            <div class="w-[80%] mx-auto">
+                <p-chart class="w-full" type="bar" [data]="productData"></p-chart>
+            </div>
+        </div>
+
+   
+    </div>
+
+
+</div>

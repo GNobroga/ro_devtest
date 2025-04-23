@@ -13,8 +13,7 @@ export class DashboardComponent {
   breadcrumbs: MenuItem[] = [
     {
       label: 'Dashboard',
-      icon: 'pi pi-home  text-2xl',
-      styleClass: 'text-2xl font-semibold',
+      icon: 'pi pi-home',
     }
   ];
   

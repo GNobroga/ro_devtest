@@ -5,7 +5,7 @@ import { CoreModule } from './core/core.module';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Toast, CoreModule],
+  imports: [RouterOutlet, CoreModule],
   providers: [],
   template: `
     <router-outlet/>

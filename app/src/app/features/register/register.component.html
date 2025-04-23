@@ -1,80 +1,221 @@
-<div class="bg-brand-primary min-h-screen p-5">
-    <p-card styleClass="max-w-xl mx-auto">
-        <form class="p-5" [formGroup]="form" (ngSubmit)="register()">
-            <div>
-                <div class="mb-5 flex flex-col items-center justify-center">
-                    <h1 class="text-2xl font-bold">Bem vindo ao <span class="text-blue-700">Cadastro</span></h1>
-                     <p class="mt-5 text-base text-muted-color">Preencha os dados para se cadastrar</p>
-                </div>
-                <div class="flex flex-col gap-5">
-                   <div>
-                       <span>
-                            <p-floatlabel variant="on">
-                                <input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('name')}" formControlName="name" fluid pInputText autocomplete="off"/>
-                                <label for="on_label">Nome Completo</label>
-                            </p-floatlabel>
-                            <p-message *ngIf="isFieldInvalid('name')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('name') }}</p-message>
-                       </span>
-                   </div>
-                   <div>
-                        <span>
-                            <p-floatlabel variant="on">
-                                <input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('email')}" formControlName="email" fluid pInputText autocomplete="off"/>
-                                <label for="on_label">Email</label>
-                            </p-floatlabel>
-                            <p-message *ngIf="isFieldInvalid('email')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('email') }}</p-message>
-                        </span>
-                    </div>
-                    <div>
-                        <span>
-                            <p-floatlabel variant="on">
-                                <input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('userName')}" formControlName="userName" fluid pInputText autocomplete="off"/>
-                                <label for="on_label">Nome de Usuário</label>
-                            </p-floatlabel>
-                            <p-message *ngIf="isFieldInvalid('userName')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('userName') }}</p-message>
-                        </span>
-                       
-                    </div>
-                    <div>
-                        <span>
-                            <p-floatlabel variant="on">
-                                <input type="password" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('password')}" formControlName="password" fluid pInputText autocomplete="off"/>
-                                <label for="on_label">Senha</label>
-                            </p-floatlabel>
-                            <p-message *ngIf="isFieldInvalid('password')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('password') }}</p-message>
-                        </span>
-                    </div>
-                    <div>
-                        <span>
-                            <p-floatlabel variant="on">
-                                <input type="password" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('passwordConfirmation')}" formControlName="passwordConfirmation" fluid pInputText autocomplete="off"/>
-                                <label for="on_label">Senha de Confirmação</label>
-                            </p-floatlabel>
-                            <p-message *ngIf="isFieldInvalid('passwordConfirmation')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('passwordConfirmation') }}</p-message>
-
-                        </span>
-                        
-                    </div>
-                </div>
-                <span class="flex flex-col gap-2 mt-4">
-                    <div class="flex items-center">
-                        <p-radiobutton name="role" value="Admin" id="admin" [formControl]="role"/>
-                        <label for="admin" class="ml-2">Administrador</label>
-                    </div>
-                    <div class="flex items-center">
-                        <p-radiobutton name="role" value="Customer" id="customer" [formControl]="role"/>
-                        <label for="customer" class="ml-2">Cliente</label>
-                    </div>
-                    
-                </span>
+<div class="bg-brand-primary min-h-screen p-4 flex items-center justify-center">
+    <p-card styleClass="max-w-lg w-full shadow-xl rounded-2xl overflow-hidden ">
+      <div >
+  
+        <!-- Formulário -->
+        <div class="px-5 py-4">
+          <div class="flex flex-col items-center mb-8">
+            <div class="bg-blue-600 text-white p-3 rounded-xl shadow-md mb-4">
+              <i class="pi pi-user-plus text-3xl"></i>
             </div>
-            <button pButton fluid class="mt-6">Cadastrar-se</button>
-            <span class="gap-1 mt-6 flex justify-center">
-                <p>Já possui uma conta? </p>
-                <span routerLink="/login" class="font-semibold hover:underline cursor-pointer">Faça Login</span>
-            </span>
-        </form>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 text-center">
+              Criar <span class="text-blue-600">Conta</span>
+            </h1>
+            <p class="mt-2 text-gray-600 text-center">
+              Preencha os campos abaixo para se registrar
+            </p>
+          </div>
+  
+          <form [formGroup]="form" (ngSubmit)="register()" class="space-y-5">
+            <!-- Nome Completo -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+              <div class="relative">
+                <span class="p-float-label">
+                  <p-iconfield class="w-full">
+                    <p-inputicon class="pi pi-user text-gray-400" />
+                    <input 
+                      formControlName="name" 
+                      pInputText 
+                      placeholder="Digite seu nome completo"
+                      [ngClass]="{'p-invalid': isFieldInvalid('name')}"
+                      class="w-full pl-10" />
+                  </p-iconfield>
+                </span>
+                <p-message 
+                  *ngIf="isFieldInvalid('name')" 
+                  severity="error" 
+                  class="mt-1 text-sm">
+                  {{ getErrorMessage('name') }}
+                </p-message>
+              </div>
+            </div>
+  
+            <!-- Email -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <div class="relative">
+                <span class="p-float-label">
+                  <p-iconfield class="w-full">
+                    <p-inputicon class="pi pi-envelope text-gray-400" />
+                    <input 
+                      formControlName="email" 
+                      pInputText 
+                      placeholder="Digite seu email"
+                      [ngClass]="{'p-invalid': isFieldInvalid('email')}"
+                      class="w-full pl-10" />
+                  </p-iconfield>
+                </span>
+                <p-message 
+                  *ngIf="isFieldInvalid('email')" 
+                  severity="error" 
+                  class="mt-1 text-sm">
+                  {{ getErrorMessage('email') }}
+                </p-message>
+              </div>
+            </div>
+  
+            <!-- Nome de Usuário -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Nome de Usuário</label>
+              <div class="relative">
+                <span class="p-float-label">
+                  <p-iconfield class="w-full">
+                    <p-inputicon class="pi pi-at text-gray-400" />
+                    <input 
+                      formControlName="userName" 
+                      pInputText 
+                      placeholder="Digite um nome de usuário"
+                      [ngClass]="{'p-invalid': isFieldInvalid('userName')}"
+                      class="w-full pl-10" />
+                  </p-iconfield>
+                </span>
+                <p-message 
+                  *ngIf="isFieldInvalid('userName')" 
+                  severity="error" 
+                  class="mt-1 text-sm">
+                  {{ getErrorMessage('userName') }}
+                </p-message>
+              </div>
+            </div>
+  
+            <!-- Senha -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+              <div class="relative">
+                <p-password 
+                  fluid
+                  formControlName="password"
+                  [toggleMask]="true" 
+                  placeholder="Digite sua senha"
+                  [inputStyleClass]="'w-full pl-10'"
+                  [ngClass]="{'p-invalid': isFieldInvalid('password')}">
+                  <ng-template pTemplate="header">
+                    <div class="text-xs text-gray-500">Requisitos de senha:</div>
+                  </ng-template>
+                </p-password>
+                <i class="pi pi-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              </div>
+              <p-message 
+                  *ngIf="isFieldInvalid('password')" 
+                  severity="error" 
+                  class="mt-1 text-sm">
+                  {{ getErrorMessage('password') }}
+                </p-message>
+            </div>
+  
+            <!-- Confirmação de Senha -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Confirme sua Senha</label>
+              <div class="relative">
+                <p-password 
+                  fluid
+                  formControlName="passwordConfirmation"
+                  [toggleMask]="true"
+                  placeholder="Confirme sua senha"
+                  [inputStyleClass]="'w-full pl-10'"
+                  [ngClass]="{'p-invalid': isFieldInvalid('passwordConfirmation')}">
+                </p-password>
+                <i class="pi pi-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              </div>
+
+              <p-message 
+                    *ngIf="isFieldInvalid('passwordConfirmation')" 
+                    severity="error" 
+                    class="mt-1 text-sm">
+                    {{ getErrorMessage('passwordConfirmation') }}
+                </p-message>
+            </div>
+  
+            <!-- Tipo de Conta -->
+            <div class="pt-2">
+              <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Conta</label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <p-radioButton 
+                    name="role" 
+                    value="Admin" 
+                    inputId="admin" 
+                    [formControl]="role"
+                    class="hidden">
+                  </p-radioButton>
+                  <label 
+                    for="admin" 
+                    class="flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition-all"
+                    [ngClass]="{
+                      'border-blue-500 bg-blue-50': role.value === 'Admin',
+                      'border-gray-300 hover:border-blue-300': role.value !== 'Admin'
+                    }">
+                    <i class="pi pi-shield text-2xl mb-2" 
+                       [ngClass]="{
+                         'text-blue-600': role.value === 'Admin',
+                         'text-gray-500': role.value !== 'Admin'
+                       }"></i>
+                    <span class="font-medium">Administrador</span>
+                    <span class="text-xs text-gray-500 mt-1 text-center">Acesso completo ao sistema</span>
+                  </label>
+                </div>
+                
+                <div>
+                  <p-radioButton 
+                    name="role" 
+                    value="Customer" 
+                    inputId="customer" 
+                    [formControl]="role"
+                    class="hidden">
+                  </p-radioButton>
+                  <label 
+                    for="customer" 
+                    class="flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer transition-all"
+                    [ngClass]="{
+                      'border-blue-500 bg-blue-50': role.value === 'Customer',
+                      'border-gray-300 hover:border-blue-300': role.value !== 'Customer'
+                    }">
+                    <i class="pi pi-user text-2xl mb-2" 
+                       [ngClass]="{
+                         'text-blue-600': role.value === 'Customer',
+                         'text-gray-500': role.value !== 'Customer'
+                       }"></i>
+                    <span class="font-medium">Cliente</span>
+                    <span class="text-xs text-gray-500 mt-1 text-center">Acesso às funcionalidades básicas</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+  
+
+  
+            <!-- Botão de Cadastro -->
+            <button 
+              pButton 
+              type="submit" 
+              label="Cadastrar-se" 
+              icon="pi pi-user-plus"
+              iconPos="right"
+              class="w-full  !bg-blue-600 hover:!bg-blue-700 !border-blue-600 mt-4">
+            </button>
+  
+            <!-- Link para Login -->
+            <div class="text-center text-sm text-gray-600">
+              Já tem uma conta? 
+              <a 
+                routerLink="/login" 
+                class="font-medium text-blue-600 hover:text-blue-800 hover:underline ml-1">
+                Faça login
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
     </p-card>
 </div>
-
-<!-- <p-toast/> -->
