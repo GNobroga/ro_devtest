@@ -54,11 +54,26 @@ public class UsersController(IMediator mediator) : Controller {
     }
 
     [Authorize]
-    [HttpPut("{id}")]
     [ProducesResponseType(typeof(ApiResponse<UpdateUserCommand>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateUser([FromRoute] string id, [FromBody] UpdateUserCommand request) {
+    [HttpPut("admin/{id}")]
+    public async Task<IActionResult> UpdateAdminUser([FromRoute] string id, UpdateUserCommand request) {
+        request.Role = UserRoles.Admin;
+        return await UpdateUser(id, request);
+    }
+
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<UpdateUserCommand>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    [HttpPut("customer/{id}")]
+    public async Task<IActionResult> UpdateCustomerUser([FromRoute] string id, UpdateUserCommand request) {
+        request.Role = UserRoles.Customer;
+        return await UpdateUser(id, request);
+    }
+
+    private async Task<IActionResult> UpdateUser(string id, UpdateUserCommand request) {
         request.UserId = id;
         UpdateUserResult result = await _mediator.Send(request);
         return Ok(ApiResponse<UpdateUserResult>.FromSuccess(result));

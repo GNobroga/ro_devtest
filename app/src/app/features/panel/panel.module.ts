@@ -5,12 +5,14 @@ import { PanelRoutingModule } from './panel-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PanelComponent } from './panel.component';
 import { SharedModule } from '../../shared/shared.module';
+import { ProfileComponent } from './profile/profile.component';
 
 
 @NgModule({
   declarations: [
     DashboardComponent,
-    PanelComponent
+    PanelComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,
