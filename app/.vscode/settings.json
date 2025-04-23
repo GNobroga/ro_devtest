@@ -1,0 +1,9 @@
+{
+    "tailwindCSS.experimental.configFile": "./tailwind.config.js",
+    "tailwindCSS.classAttributes": [
+        "class",
+        "className",
+        "ngClass",
+        "styleClass"
+    ]
+}

@@ -1,0 +1,22 @@
+
+@import "primeicons/primeicons.css";
+
+@layer tailwind-base, primeng, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+}
+
+.bg-brand-primary {
+    @apply bg-gradient-to-r from-blue-600 to-purple-700;
+}

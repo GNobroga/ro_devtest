@@ -1,0 +1,37 @@
+<div class="bg-brand-primary flex items-center justify-center min-h-screen p-10">
+    <p-card styleClass="max-w-xl mx-auto" class="w-full">
+        <form class="p-5" [formGroup]="form">
+            <div>
+                <div class="mb-5 flex flex-col items-center justify-center">
+                    <h1 class="text-2xl font-bold">Bem vindo ao <span class="text-blue-700">Login</span></h1>
+                     <p class="mt-5 text-base text-muted-color">Preencha os dados do login para acessar</p>
+                </div>
+                <div class="flex flex-col gap-5">
+                   <div>
+                        <span>
+                            <p-iconfield>
+                                <p-inputicon styleClass="pi pi-user" />
+                                <input formControlName="username" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('username')}" class="ng-invalid ng-dirty" size="large" fluid type="text" pInputText placeholder="Digite seu Usuário" />
+                            </p-iconfield>
+                            <p-message *ngIf="isFieldInvalid('username')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('username') }}</p-message>
+                        </span>
+                   </div>
+                   <div>
+                        <span>
+                            <p-iconfield>
+                                <p-inputicon styleClass="pi pi-lock" />
+                                <input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('username')}" formControlName="password" size="large" fluid type="password" pInputText placeholder="Digite sua Senha" />
+                            </p-iconfield>
+                            <p-message *ngIf="isFieldInvalid('password')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('password') }}</p-message>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <button pButton fluid class="mt-6">Entrar</button>
+            <span class="gap-1 mt-6 flex justify-center">
+                <p>Ainda não possui uma conta? </p>
+                <span routerLink="/register" class="font-semibold hover:underline cursor-pointer">Registre-se</span>
+            </span>
+        </form>
+    </p-card>
+</div>

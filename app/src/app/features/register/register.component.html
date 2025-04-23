@@ -1,0 +1,79 @@
+<div class="bg-brand-primary min-h-screen p-5">
+    <p-card styleClass="max-w-xl mx-auto">
+        <form class="p-5" [formGroup]="form" (ngSubmit)="register()">
+            <div>
+                <div class="mb-5 flex flex-col items-center justify-center">
+                    <h1 class="text-2xl font-bold">Bem vindo ao <span class="text-blue-700">Cadastro</span></h1>
+                     <p class="mt-5 text-base text-muted-color">Preencha os dados para se cadastrar</p>
+                </div>
+                <div class="flex flex-col gap-5">
+                   <div>
+                       <span>
+                            <p-floatlabel variant="on">
+                                <input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('name')}" formControlName="name" fluid pInputText autocomplete="off"/>
+                                <label for="on_label">Nome Completo</label>
+                            </p-floatlabel>
+                            <p-message *ngIf="isFieldInvalid('name')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('name') }}</p-message>
+                       </span>
+                   </div>
+                   <div>
+                        <span>
+                            <p-floatlabel variant="on">
+                                <input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('email')}" formControlName="email" fluid pInputText autocomplete="off"/>
+                                <label for="on_label">Email</label>
+                            </p-floatlabel>
+                            <p-message *ngIf="isFieldInvalid('email')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('email') }}</p-message>
+                        </span>
+                    </div>
+                    <div>
+                        <span>
+                            <p-floatlabel variant="on">
+                                <input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('userName')}" formControlName="userName" fluid pInputText autocomplete="off"/>
+                                <label for="on_label">Nome de Usuário</label>
+                            </p-floatlabel>
+                            <p-message *ngIf="isFieldInvalid('userName')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('userName') }}</p-message>
+                        </span>
+                       
+                    </div>
+                    <div>
+                        <span>
+                            <p-floatlabel variant="on">
+                                <input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('password')}" formControlName="password" fluid pInputText autocomplete="off"/>
+                                <label for="on_label">Senha</label>
+                            </p-floatlabel>
+                            <p-message *ngIf="isFieldInvalid('password')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('password') }}</p-message>
+                        </span>
+                    </div>
+                    <div>
+                        <span>
+                            <p-floatlabel variant="on">
+                                <input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('passwordConfirmation')}" formControlName="passwordConfirmation" fluid pInputText autocomplete="off"/>
+                                <label for="on_label">Senha de Confirmação</label>
+                            </p-floatlabel>
+                            <p-message *ngIf="isFieldInvalid('passwordConfirmation')" styleClass="mt-1" severity="error" variant="simple" size="small">{{ getErrorMessage('passwordConfirmation') }}</p-message>
+
+                        </span>
+                        
+                    </div>
+                </div>
+                <span class="flex flex-col gap-2 mt-4">
+                    <div class="flex items-center">
+                        <p-radiobutton name="role" value="Admin" id="admin" [formControl]="role"/>
+                        <label for="admin" class="ml-2">Administrador</label>
+                    </div>
+                    <div class="flex items-center">
+                        <p-radiobutton name="role" value="Customer" id="customer" [formControl]="role"/>
+                        <label for="customer" class="ml-2">Cliente</label>
+                    </div>
+                    
+                </span>
+            </div>
+            <button type="submit" pButton fluid class="mt-6">Cadastrar-se</button>
+            <span class="gap-1 mt-6 flex justify-center">
+                <p>Já possui uma conta? </p>
+                <span routerLink="/login" class="font-semibold hover:underline cursor-pointer">Faça Login</span>
+            </span>
+        </form>
+    </p-card>
+</div>
+
