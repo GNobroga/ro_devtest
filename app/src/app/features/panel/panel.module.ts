@@ -7,6 +7,7 @@ import { PanelRoutingModule } from './panel-routing.module';
 import { PanelComponent } from './panel.component';
 import { ProductComponent } from './product/product.component';
 import { ProfileComponent } from './profile/profile.component';
+import { OrderModule } from './order/order.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { ProfileComponent } from './profile/profile.component';
   imports: [
     CommonModule,
     PanelRoutingModule,
-    SharedModule
+    SharedModule,
+    OrderModule
   ],
   providers: []
 })

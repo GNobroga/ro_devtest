@@ -5,9 +5,9 @@ using RO.DevTest.Domain.Enums;
 namespace RO.DevTest.Application.Features.Order.Queries.GetOrderSummaryByPeriodQuery;
 
 public class GetOrderSummaryByPeriodQuery : IRequest<OrderSummaryDTO> {
-    public DateOnly? StartDate { get; set; }
+    public DateTime? StartDate { get; set; }
 
-    public DateOnly? EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
 
-    public OrderStatus? Status { get; set; } = OrderStatus.Paid;
+    public OrderStatus? Status { get; set; }
 }

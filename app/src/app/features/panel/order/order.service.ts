@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../../../core/services/base.service';
 import { OrderStatus } from './order.enum';
+import { map, Observable } from 'rxjs';
+import { OrderSummary } from './order.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +13,10 @@ export class OrderService extends BaseService {
     super('order');
   }
 
-  getSummary(startDate: Date, endDate: Date, status: OrderStatus = OrderStatus.paid) {
-    return this.handleRequest(
+  getSummary(startDate: Date, endDate: Date, status?: OrderStatus): Observable<OrderSummary> {
+    return this.handleRequest<OrderSummary>(
       this.httpClient.post(this.extendApiUrl('/summary'), { startDate, endDate, status })
-    );
+    ).pipe(map(r => r.data!));
   }
 
     // list(filters: Filter): Observable<PageResult<Product>> {

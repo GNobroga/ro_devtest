@@ -12,8 +12,8 @@ public class GetOrderSummaryByPeriodQueryHandler(IOrderRepository repository) : 
     public async Task<OrderSummaryDTO> Handle(GetOrderSummaryByPeriodQuery request, CancellationToken cancellationToken) {
         await request.ThrowIfInvalidCommandAsync(new GetOrderSummaryByPeriodQueryValidator());
 
-        var startDate = request.StartDate!.Value;
-        var endDate = request.EndDate!.Value;
+        var startDate = DateOnly.FromDateTime(request.StartDate!.Value);
+        var endDate = DateOnly.FromDateTime(request.EndDate!.Value);
 
         if (startDate > endDate) 
             throw new BadRequestException("A data de inicio não pode ser maior que a data final");

@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
+import { OrderStatus } from '../order/order.enum';
+import { ToastrService } from 'ngx-toastr';
+import { OrderService } from '../order/order.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,6 +13,18 @@ import { MenuItem } from 'primeng/api';
 })
 export class DashboardComponent {
 
+  form = new FormGroup({
+    startDate: new FormControl(new Date(), [Validators.required]),
+    endDate: new FormControl(new Date(), [Validators.required]),
+    status: new FormControl(OrderStatus.ALL),
+  });
+
+  statusOptions = [
+    { label: 'Todos', value: OrderStatus.ALL },
+    { label: 'Cancelado', value: OrderStatus.CANCELLED },
+    { label: 'Pendente', value: OrderStatus.PENDING },
+    { label: 'Pago', value: OrderStatus.PAID },
+  ];
 
   breadcrumbs: MenuItem[] = [
     {
@@ -16,6 +32,8 @@ export class DashboardComponent {
       icon: 'pi pi-home',
     }
   ];
+
+  constructor(readonly toastrService: ToastrService, readonly orderService: OrderService) {}
   
 
   products: any = [
@@ -26,6 +44,19 @@ export class DashboardComponent {
   ];
 
   productData: any;
+
+  applyFilters() {
+    if (this.form.invalid) {
+      this.toastrService.warning('Preencha a data de início e fim para prosseguir');
+      return;
+    }
+    const { startDate, endDate, status } = this.form.value;
+  
+	this.orderService.getSummary(startDate!, endDate!, (status === OrderStatus.ALL) ? undefined : status!)
+		.subscribe(summary => {
+			console.log(summary);
+		});
+  }
 
   ngOnInit() {
     this.productData = {

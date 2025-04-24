@@ -10,12 +10,13 @@
             <i class="pi pi-filter mr-2 text-blue-500"></i>
             Filtrar por período
         </h3>
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+        <div [formGroup]="form" class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
             <!-- Data Início -->
-            <div class="flex-1 w-full ">
+            <div class="flex-1 w-full">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Data Início</label>
                 <div class="relative">
                     <p-datepicker 
+                        formControlName="startDate"
                         placeholder="Selecione a data inicial" 
                         inputId="range_start"
                         [showIcon]="true" 
@@ -33,6 +34,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Data Fim</label>
                 <div class="relative">
                     <p-datepicker 
+                        formControlName="endDate"
                         placeholder="Selecione a data final" 
                         inputId="range_end"
                         [showIcon]="true" 
@@ -45,13 +47,23 @@
                 </div>
             </div>
 
+             <!-- Data Fim -->
+             <div class="flex-1 w-full">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Data Fim</label>
+                <div class="relative">
+                    <p-select formControlName="status" fluid placeholder="Status" [options]="statusOptions" optionLabel="label" optionValue="value"></p-select>
+                </div>
+            </div>
+
             <!-- Botão de ação -->
             <div class="self-end sm:self-center">
-                <button pButton type="button" label="Aplicar Filtros" icon="pi pi-check"
+                <button (click)="applyFilters()" pButton type="button" label="Aplicar Filtros" icon="pi pi-check"
                         class="!px-5 py-2.5 bg-blue-600 hover:!bg-blue-700 mt-6 sm:mt-0"></button>
             </div>
         </div>
     </div>
+
+    {{ form.value | json }}
 
     <span class="font-medium">Cards de métricas</span>
 

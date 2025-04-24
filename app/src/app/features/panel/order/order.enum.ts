@@ -1,6 +1,7 @@
 
 export enum OrderStatus  {
-    cancelled = 1,
-    paid = 2,
-    pending = 3,
+    ALL = 0,
+    CANCELLED = 1,
+    PAID = 2,
+    PENDING = 3,
 }
