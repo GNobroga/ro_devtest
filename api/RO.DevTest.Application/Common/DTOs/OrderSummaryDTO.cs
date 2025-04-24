@@ -1,12 +1,14 @@
 namespace RO.DevTest.Application.DTOs;
 
-public record ProductDTO(
+public record OrderSummaryProductDTO(
     Guid Id,
     string Name,
     decimal Total
 );
 public record OrderSummaryDTO(
     long TotalOrders,
+    long TotalClients,
     decimal Revenue,
-    List<ProductDTO> Products
-);
+    List<OrderSummaryProductDTO> Products
+) {
+}

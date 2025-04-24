@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PanelComponent } from './panel.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ProductComponent } from './product/product.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
         path: 'profile',
         component: ProfileComponent,
       },
+      {
+        path: 'product',
+        loadChildren: () => import('./product/product.module'),
+      }
     ],
   },
 ];

@@ -28,7 +28,7 @@ public class OrderController(IMediator mediator, IAuthService authService) : Con
       "User.Id"
     ];
 
-    [HttpGet("summary")]
+    [HttpPost("summary")]
     public async Task<IActionResult> GetOrderSummary(GetOrderSummaryByPeriodQuery request) {
         var result = await _mediator.Send(request);
         return Ok(ApiResponse<OrderSummaryDTO>.FromSuccess(result));

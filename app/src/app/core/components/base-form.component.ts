@@ -1,19 +1,30 @@
+import { Component, inject, Input } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { BaseModel } from "../models/base.model";
-import { inject } from "@angular/core";
-import { Router } from "@angular/router";
-import { MessageService } from "primeng/api";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
+import { Observable } from "rxjs";
+import { ApiResponse } from "../models/api-response.model";
 
+@Component({
+  selector: 'app-base-form',
+  template: '',
+})
 export abstract class BaseFormComponent {
-    
+
+    @Input()
+    protected id: string | null = null;
+      
     protected abstract form: FormGroup<any>;
 
     protected formBuilder = inject(FormBuilder);
 
     protected router = inject(Router);
 
+    protected activatedRoute = inject(ActivatedRoute);
+
     protected toastrService = inject(ToastrService);
+
+    protected onUpdate?: Observable<ApiResponse<any>>;
 
     handleSubmit(callback: VoidFunction) {
       if (this.form.invalid) {

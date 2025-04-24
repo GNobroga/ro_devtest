@@ -7,11 +7,12 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using RO.DevTest.Application.Contracts.Persistance.Repositories;
+using RO.DevTest.Application.DTOs;
 using RO.DevTest.Application.Features.Product.Commands.CreateProductCommand;
 using RO.DevTest.Application.Features.Product.Commands.DeleteProductCommand;
 using RO.DevTest.Application.Features.Product.Commands.UpdateProductCommand;
-using RO.DevTest.Application.Features.Queries.GetPagedProductsQuery;
-using RO.DevTest.Application.Features.Queries.GetProductByIdQuery;
+using RO.DevTest.Application.Features.Product.Queries.GetPagedProductsQuery;
+using RO.DevTest.Application.Features.Product.Queries.GetProductByIdQuery;
 using RO.DevTest.Domain.Enums;
 using RO.DevTest.Domain.Models;
 
@@ -29,28 +30,28 @@ public class ProductsController(IMediator mediator) : ControllerBase {
         "Description"
     ];
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
-    [ProducesResponseType(typeof(ApiResponse<PageResult<GetPagedProductsResult>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<PageResult<ProductDTO>>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetProducts([FromQuery] PagedFilter filter) {
         GetPagedProductsQuery query = new(filter, SearchFields);
-        PageResult<GetPagedProductsResult> result = await _mediator.Send(query);
-        var response = ApiResponse<PageResult<GetPagedProductsResult>>.FromSuccess(result);
+        PageResult<ProductDTO> result = await _mediator.Send(query);
+        var response = ApiResponse<PageResult<ProductDTO>>.FromSuccess(result);
         return Ok(response);
     }
 
-    [Authorize(Roles = nameof(UserRoles.Admin))]
+    //[Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(ApiResponse<GetProductByIdResult>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<ProductDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProductById(Guid id) {
         GetProductByIdQuery query = new(id);
-        GetProductByIdResult result = await _mediator.Send(query);
-        return Ok(ApiResponse<GetProductByIdResult>.FromSuccess(result));
+        var result = await _mediator.Send(query);
+        return Ok(ApiResponse<ProductDTO>.FromSuccess(result));
     }
 
-    [Authorize(Roles = nameof(UserRoles.Admin))]
+   // [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(ApiResponse<DeleteProductResult>), StatusCodes.Status200OK)]
     public async Task<IActionResult> DeleteProductById(Guid id) {
@@ -71,7 +72,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
        return CreatedAtAction(nameof(GetProductById), new { id = productId }, response); 
     }
 
-    [Authorize(Roles = nameof(UserRoles.Admin))]
+   // [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(ApiResponse<CreateProductResult>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]

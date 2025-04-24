@@ -1,0 +1,129 @@
+<div class="p-6">
+  <!-- Cabeçalho e Botão de Adicionar -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-800">Listagem de Produtos</h1>
+      <p class="text-gray-600">Gerencie os produtos do seu catálogo</p>
+    </div>
+    <button pButton 
+            icon="pi pi-plus" 
+            label="Adicionar Produto" 
+            class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700"
+            routerLink="new">
+    </button>
+  </div>
+
+  <!-- Filtros e Busca -->
+  <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Buscar por nome</label>
+        <p-iconfield>
+            <p-inputicon styleClass="pi pi-search" />
+            <input [formControl]="keyword" fluid type="text" pInputText placeholder="Pesquisar" />
+        </p-iconfield>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de Produtos -->
+  <p-card class="!p-0 overflow-hidden">
+    <p-table  
+            [value]="items"
+            styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name" style="width: 30%">Nome <p-sortIcon field="name"></p-sortIcon></th>
+          <th pSortableColumn="price" style="width: 15%">Preço <p-sortIcon field="price"></p-sortIcon></th>
+          <th style="width: 40%">Descrição</th>
+          <th style="width: 15%; min-width: 120px">Ações</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-product>
+        <tr>
+          <td>{{product.name}}</td>
+          <td>{{product.price | currency:'BRL':'symbol':'1.2-2'}}</td>
+          <td>
+            <p class="line-clamp-2 text-gray-700">{{product.description || 'Sem descrição'}}</p>
+          </td>
+          <td>
+            <div class="flex gap-2">
+              <button pButton 
+                      icon="pi pi-pencil" 
+                      class="p-button-rounded p-button-text p-button-sm p-button-info"
+                      [routerLink]="['/products/edit', product.id]"
+                      pTooltip="Editar" tooltipPosition="top">
+              </button>
+              <button pButton 
+                      icon="pi pi-trash" 
+                      class="p-button-rounded p-button-text p-button-sm p-button-danger"
+                      
+                      pTooltip="Excluir" tooltipPosition="top">
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" class="text-center py-8 text-gray-500">
+            <i class="pi pi-search text-2xl mb-2"></i>
+            <p>Nenhum produto encontrado</p>
+            <button pButton 
+                    label="Cadastrar Produto" 
+                    icon="pi pi-plus"
+                    class="!mt-4 !px-4 !py-2 !text-sm !bg-blue-600 hover:!bg-blue-700"
+                    routerLink="new">
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td colspan="4" class="text-center py-8">
+            <p-progressSpinner styleClass="w-8 h-8"></p-progressSpinner>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div class="card flex justify-center">
+        <p-paginator 
+            [rows]="pageResult.pageSize"
+            [totalRecords]="pageResult.totalItems"
+            (onPageChange)="onPageChange($event)" 
+            [pageLinkSize]="5"
+            [alwaysShow]="false"
+            [rowsPerPageOptions]="[5, 20, 30]" />
+    </div>
+  </p-card>
+
+  <!-- Dialogo de Confirmação de Exclusão -->
+  <p-dialog header="Confirmar Exclusão" 
+          
+            [style]="{width: '450px'}" 
+            [modal]="true">
+    <div class="confirmation-content">
+      <i class="pi pi-exclamation-triangle text-red-500 mr-3" style="font-size: 2rem"></i>
+      <span>Tem certeza que deseja excluir o produto <b></b>?</span>
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton 
+              icon="pi pi-times" 
+              label="Cancelar" 
+          
+              class="p-button-text"></button>
+      <button pButton 
+              icon="pi pi-check" 
+              label="Confirmar" 
+              
+              class="!bg-red-500 hover:!bg-red-600"></button>
+    </ng-template>
+  </p-dialog>
+
+  
+</div>
+
+<router-outlet/>

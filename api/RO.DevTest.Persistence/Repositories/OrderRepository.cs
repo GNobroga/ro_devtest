@@ -21,13 +21,19 @@ public class OrderRepository(DefaultContext context) : BaseRepository<Order>(con
 
         var countOrders = await baseQuery.CountAsync();
 
+        var countCustomer = await Context.Users
+            .Where(u => Context.UserRoles
+                .Any(ur => ur.UserId == u.Id && 
+                        Context.Roles.Any(r => r.Id == ur.RoleId && r.Name == "Customer")))
+            .CountAsync();
+
         var revenue = await baseProductsQuery
             .Select(o => o.Product.Price * o.Quantity)
             .SumAsync();
 
         var productDtos = baseProductsQuery
-            .Select(o => new ProductDTO(o.ProductId, o.Product.Name, o.Product.Price * o.Quantity));
+            .Select(o => new OrderSummaryProductDTO(o.ProductId, o.Product.Name, o.Product.Price * o.Quantity));
 
-        return new OrderSummaryDTO(countOrders, revenue, await productDtos.ToListAsync());
+        return new OrderSummaryDTO(countOrders, countCustomer, revenue, await productDtos.ToListAsync());
     }
 }

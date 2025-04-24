@@ -6,18 +6,20 @@ namespace RO.DevTest.Application.Common.Mappers;
 public static class OrderMapper {
 
     public static OrderDTO ToDTO(Domain.Entities.Order order) {
-        DateTime placedAt = order.CreatedOn;
-        UserDTO user = new(order.User.Id, order.User.Name, order.User.Email!);
+        var user = new UserDTO(order.User.Id, order.User.Name, order.User.Email!);
 
-        List<OrderProductDTO> items = order.OrderProducts.Select(orderProduct => {
-            var product = orderProduct.Product;
-            var quantity = orderProduct.Quantity;
-            return new OrderProductDTO(product.Id, product.Name, product.Price, quantity);
-        }).ToList();
+        var items = order.OrderProducts
+            .Select(op => new OrderProductDTO(
+                op.Product.Id,
+                op.Product.Name,
+                op.Product.Price,
+                op.Quantity))
+            .ToList();
 
-        decimal total = items.Aggregate((decimal) 0, (acc, curr) =>  acc + (curr.Price * curr.Quantity));
+        var total = items.Sum(item => item.Price * item.Quantity);
 
-        return new OrderDTO(placedAt, order.Status, total, user, items);
+        return new OrderDTO(order.CreatedOn, order.Status, total, user, items);
     }
+
 
 }

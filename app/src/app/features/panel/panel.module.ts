@@ -1,10 +1,11 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
-import { PanelRoutingModule } from './panel-routing.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { PanelComponent } from './panel.component';
 import { SharedModule } from '../../shared/shared.module';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { PanelRoutingModule } from './panel-routing.module';
+import { PanelComponent } from './panel.component';
+import { ProductComponent } from './product/product.component';
 import { ProfileComponent } from './profile/profile.component';
 
 
@@ -12,12 +13,14 @@ import { ProfileComponent } from './profile/profile.component';
   declarations: [
     DashboardComponent,
     PanelComponent,
-    ProfileComponent
+    ProfileComponent,
+    ProductComponent
   ],
   imports: [
     CommonModule,
     PanelRoutingModule,
     SharedModule
-  ]
+  ],
+  providers: []
 })
 export default class PanelModule { }

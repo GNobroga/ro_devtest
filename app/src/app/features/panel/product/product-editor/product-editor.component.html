@@ -1,0 +1,109 @@
+<p-dialog 
+  [modal]="true" 
+  [visible]="true"
+  styleClass="max-w-xl w-full"
+  [headlessTemplate]="modalContent">
+</p-dialog>
+
+<ng-template #modalContent>
+  <div class="bg-white rounded-xl shadow-2xl overflow-hidden overflow-y-auto flex flex-col max-h-[90vh]">
+    <!-- Cabeçalho -->
+    <div class="bg-gradient-to-r from-indigo-600 to-blue-600 p-5 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="bg-white/20 p-2 rounded-lg">
+          <i class="pi pi-box text-white text-xl"></i>
+        </div>
+        <div>
+          <h2 class="text-white font-bold text-xl">Novo Produto</h2>
+          <p class="text-blue-100 text-sm">Preencha os detalhes abaixo</p>
+        </div>
+      </div>
+      <button (click)="close()" class="text-white/80 hover:text-white text-xl transition-colors">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+
+        <!-- Corpo do Formulário -->
+    <div class="p-6 space-y-5" [formGroup]="form">
+        <!-- Campo Nome -->
+        <div class="space-y-2">
+            <label class="flex items-center gap-2 text-gray-700 font-medium">
+            <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                <i class="pi pi-tag text-xs"></i>
+            </span>
+            Nome do Produto *
+            </label>
+            <div class="relative">
+            <input formControlName="name" pInputText placeholder="Ex: Smartphone Premium" class="w-full pl-10">
+            <i class="pi pi-pencil absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+        </div>
+
+        <!-- Campo Preço -->
+        <div class="space-y-2">
+            <label class="flex items-center gap-2 text-gray-700 font-medium">
+            <span class="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+                <i class="pi pi-dollar text-xs"></i>
+            </span>
+            Preço *
+            </label>
+            <p-inputNumber 
+                formControlName="price"
+                mode="currency" 
+                placeholder="00,00"
+                currency="BRL" 
+                locale="pt-BR"
+                [min]="0.01"
+                class="w-full">
+            <ng-template pTemplate="prefix">
+                <i class="pi pi-dollar text-gray-400"></i>
+            </ng-template>
+            </p-inputNumber>
+        </div>
+
+        <!-- Campo Descrição -->
+        <div class="space-y-2">
+            <label class="flex items-center gap-2 text-gray-700 font-medium">
+            <span class="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center">
+                <i class="pi pi-align-left text-xs"></i>
+            </span>
+            Descrição
+            </label>
+            <textarea class="h-14" formControlName="description" fluid pTextarea placeholder="Descreva as características do produto..."></textarea>
+        </div>
+
+        <!-- Visualização -->
+        <div class="mt-6 border border-gray-200 rounded-lg p-4 transition-all hover:border-blue-300">
+            <h4 class="text-sm font-medium text-gray-600 mb-3 flex items-center gap-2">
+            <i class="pi pi-eye text-blue-500"></i>
+            Pré-visualização
+            </h4>
+            <div class="flex items-center gap-4">
+            <div class="bg-gray-100 border border-gray-300 rounded-lg w-16 h-16 flex items-center justify-center shrink-0">
+                <i class="pi pi-image text-gray-400 text-xl"></i>
+            </div>
+            <div>
+                <h4 class="font-semibold text-gray-800">Nome do Produto</h4>
+                <p class="text-blue-600 font-bold mt-1">R$ 0,00</p>
+                <p class="text-gray-500 text-sm mt-1 line-clamp-2">Descrição aparecerá aqui...</p>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 rounded-b-xl">
+        <div class="flex justify-between items-center">
+        <small class="text-gray-500">* Campos obrigatórios</small>
+        <div class="flex gap-3">
+            <button pButton label="Cancelar" icon="pi pi-times" class="px-5 py-2.5 bg-gray-100 text-gray-700 hover: bg-gray-200"></button>
+            <button pButton label="Cadastrar" icon="pi pi-check" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700"></button>
+        </div>
+        </div>
+    </div>
+
+
+
+  </div>
+</ng-template>

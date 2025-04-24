@@ -55,6 +55,7 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 
 @NgModule({
   declarations: [],
@@ -63,6 +64,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
   ],
   exports: [
     RadioButtonModule,
+    ScrollPanelModule,
     ScrollTopModule,
     ToggleSwitchModule,
     ProgressSpinnerModule,
@@ -119,7 +121,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    RouterModule
+    RouterModule,
   ],
   providers: []
 })
