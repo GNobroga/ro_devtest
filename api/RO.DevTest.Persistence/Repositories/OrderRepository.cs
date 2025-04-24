@@ -8,11 +8,11 @@ using RO.DevTest.Persistence.Repositories;
 
 
 public class OrderRepository(DefaultContext context) : BaseRepository<Order>(context), IOrderRepository {
-    public async Task<OrderSummaryDTO> GetOrderSummaryByPeriodAsync(DateOnly startDate, DateOnly endDate, OrderStatus status = OrderStatus.Paid) {
+    public async Task<OrderSummaryDTO> GetOrderSummaryByPeriodAsync(DateOnly startDate, DateOnly endDate, OrderStatus? status) {
         var baseQuery = Entities.Where(o =>  
             DateOnly.FromDateTime(o.CreatedOn) >= startDate && 
             DateOnly.FromDateTime(o.CreatedOn) <= endDate &&
-            o.Status.Equals(status)
+           (!status.HasValue || o.Status == status.Value)
         ).AsNoTracking();
 
         var baseProductsQuery = baseQuery.Include(o => o.OrderProducts)

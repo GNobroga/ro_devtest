@@ -11,9 +11,9 @@ export class OrderService extends BaseService {
     super('order');
   }
 
-  getSummary(startDate: Date, endDate: Date, status: OrderStatus) {
+  getSummary(startDate: Date, endDate: Date, status: OrderStatus = OrderStatus.paid) {
     return this.handleRequest(
-      this.httpClient.get(this.extendApiUrl('/summary'), {  })
+      this.httpClient.post(this.extendApiUrl('/summary'), { startDate, endDate, status })
     );
   }
 

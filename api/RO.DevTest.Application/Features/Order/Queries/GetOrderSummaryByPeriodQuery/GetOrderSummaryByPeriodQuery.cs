@@ -9,5 +9,5 @@ public class GetOrderSummaryByPeriodQuery : IRequest<OrderSummaryDTO> {
 
     public DateOnly? EndDate { get; set; }
 
-    public OrderStatus Status { get; set; } = OrderStatus.Paid;
+    public OrderStatus? Status { get; set; } = OrderStatus.Paid;
 }

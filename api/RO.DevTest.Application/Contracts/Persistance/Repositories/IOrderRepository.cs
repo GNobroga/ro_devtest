@@ -5,5 +5,5 @@ using RO.DevTest.Domain.Enums;
 namespace RO.DevTest.Application.Contracts.Persistance.Repositories;
 
 public interface IOrderRepository : IBaseRepository<Order> { 
-   Task<OrderSummaryDTO> GetOrderSummaryByPeriodAsync(DateOnly startDate, DateOnly endDate, OrderStatus status = default);
+   Task<OrderSummaryDTO> GetOrderSummaryByPeriodAsync(DateOnly startDate, DateOnly endDate, Domain.Enums.OrderStatus? status);
 }

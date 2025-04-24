@@ -18,6 +18,7 @@ public class GetOrderSummaryByPeriodQueryHandler(IOrderRepository repository) : 
         if (startDate > endDate) 
             throw new BadRequestException("A data de inicio não pode ser maior que a data final");
         
-        return await _repository.GetOrderSummaryByPeriodAsync(startDate, endDate, request.Status);
+        Domain.Enums.OrderStatus? status =  request.Status;
+        return await _repository.GetOrderSummaryByPeriodAsync(startDate, endDate, status);
     }
 }
