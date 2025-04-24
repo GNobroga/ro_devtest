@@ -22,7 +22,7 @@
     <ng-template #content>
         <ul class="list-none p-0 m-0 overflow-hidden">
             <li routerLink="/panel">
-                <a pRipple class="flex bg-blue-600 !text-white items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
+                <a [ngClass]="getActiveRouteClasses('/panel', 'full')" pRipple class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
                     <i class="pi pi-home mr-2"></i>
                     <span class="font-medium">Dashboard</span>
                 </a>
@@ -43,7 +43,8 @@
                 </a>
                 <ul class="list-none py-0 pl-4 pr-0 m-0 overflow-y-hidden transition-all duration-[400ms] ease-in-out">
                     <li routerLink="product">
-                        <a
+                        <a  
+                            [ngClass]="getActiveRouteClasses('/panel/product')"
                             pRipple
                             class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
                         >
@@ -53,6 +54,7 @@
                     </li>
                     <li>
                         <a
+                            [ngClass]="getActiveRouteClasses('/panel/customer')"
                             pRipple
                             class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
                         >
@@ -62,6 +64,7 @@
                     </li>
                     <li>
                         <a
+                            [ngClass]="getActiveRouteClasses('/panel/order')"
                             pRipple
                             class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
                         >

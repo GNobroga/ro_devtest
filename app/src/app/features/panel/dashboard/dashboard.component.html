@@ -63,24 +63,19 @@
         </div>
     </div>
 
-    {{ form.value | json }}
-
     <span class="font-medium">Cards de métricas</span>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 mt-2">
+    <div class="flex flex-wrap [&>div]:flex-grow gap-6 mb-8 mt-2">
         <!-- Pedidos Card -->
         <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-l-4 border-indigo-500">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Pedidos</p>
-                    <p class="mt-2 text-3xl font-bold text-gray-900">1,257</p>
+                    <p class="mt-2 text-3xl font-bold text-gray-900">{{ orderSummary.totalOrders  }}</p>
                 </div>
                 <div class="bg-indigo-100 text-indigo-600 p-3 rounded-lg">
                     <i class="pi pi-shopping-cart text-2xl"></i>
                 </div>
-            </div>
-            <div class="mt-4">
-                <!-- <p-chart type="line" [data]="miniChartData" [options]="miniChartOptions" height="50px"></p-chart> -->
             </div>
         </div>
 
@@ -89,14 +84,11 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Receita</p>
-                    <p class="mt-2 text-3xl font-bold text-gray-900">R$ 48,257</p>
+                    <p class="mt-2 text-3xl font-bold text-gray-900">{{ orderSummary.revenue | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</p>
                 </div>
                 <div class="bg-emerald-100 text-emerald-600 p-3 rounded-lg">
                     <i class="pi pi-wallet text-2xl"></i>
                 </div>
-            </div>
-            <div class="mt-4">
-                <!-- <p-chart type="line" [data]="miniChartData2" [options]="miniChartOptions" height="50px"></p-chart> -->
             </div>
         </div>
 
@@ -105,7 +97,7 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Clientes</p>
-                    <p class="mt-2 text-3xl font-bold text-gray-900">342</p>
+                    <p class="mt-2 text-3xl font-bold text-gray-900">{{ orderSummary.totalClients }}</p>
                 </div>
                 <div class="bg-amber-100 text-amber-600 p-3 rounded-lg">
                     <i class="pi pi-users text-2xl"></i>
@@ -121,14 +113,11 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Ticket Médio</p>
-                    <p class="mt-2 text-3xl font-bold text-gray-900">R$ 142</p>
+                    <p class="mt-2 text-3xl font-bold text-gray-900">{{ calculateAverageTicket(orderSummary.revenue, orderSummary.totalOrders) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</p>
                 </div>
                 <div class="bg-purple-100 text-purple-600 p-3 rounded-lg">
                     <i class="pi pi-tag text-2xl"></i>
                 </div>
-            </div>
-            <div class="mt-4">
-                <!-- <p-chart type="line" [data]="miniChartData4" [options]="miniChartOptions" height="50px"></p-chart> -->
             </div>
         </div>
     </div>
@@ -145,12 +134,14 @@
 
             </div>
             <div class="w-[80%] mx-auto">
-                <p-chart class="w-full" type="bar" [data]="productData"></p-chart>
+                <p-chart *ngIf="productData != null" class="w-full" type="bar" [data]="productData"></p-chart>
             </div>
         </div>
 
 
     </div>
 
-
+   
 </div>
+
+<app-loader *ngIf="orderService.isLoading()"/>

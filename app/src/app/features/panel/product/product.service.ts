@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BaseService } from "../../../core/services/base.service";
 import { CreateProduct, CreateProductResult, DeleteProductResult, Product, UpdateProduct, UpdateProductResult } from "./product.model";
-import { filter, map, Observable } from "rxjs";
+import { filter, map, Observable, Subject } from "rxjs";
 import { ApiResponse } from "../../../core/models/api-response.model";
 import { Filter } from "../../../core/models/filter.model";
 import { QueryParamsUtils } from "../../../core/utilities/query-params";
@@ -9,6 +9,8 @@ import { PageResult } from "../../../core/models/page-result.model";
 
 @Injectable()
 export class ProductService extends BaseService {
+
+    triggerListReload$ = new Subject();
 
     constructor() {
         super('product');

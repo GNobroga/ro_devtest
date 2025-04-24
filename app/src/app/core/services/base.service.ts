@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
-import { catchError, finalize, map, Observable, throwError } from "rxjs";
+import { catchError, delay, finalize, map, Observable, pipe, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
 import { ApiResponse } from "../models/api-response.model";
 import { initialize } from "../rxjs/initialize";
@@ -35,6 +35,7 @@ export abstract class BaseService {
         return request$
             .pipe(
                 initialize(() => this.isLoading.set(true)),
+                delay(100),
                 catchError((err: HttpErrorResponse) => {
                     const response = err.error as ApiResponse<any>;
                     const statusCode = response.statusCode;

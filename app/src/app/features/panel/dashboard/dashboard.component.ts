@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
 import { OrderStatus } from '../order/order.enum';
 import { ToastrService } from 'ngx-toastr';
 import { OrderService } from '../order/order.service';
+import { OrderSummary, OrderSummaryProduct } from '../order/order.model';
+import { DateUtils } from '../../../core/utilities/date-utils';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,8 +16,8 @@ import { OrderService } from '../order/order.service';
 export class DashboardComponent {
 
   form = new FormGroup({
-    startDate: new FormControl(new Date(), [Validators.required]),
-    endDate: new FormControl(new Date(), [Validators.required]),
+    startDate: new FormControl(DateUtils.generateFirstDayOfMonth(), [Validators.required]),
+    endDate: new FormControl(DateUtils.generateLastDayOfMonth(), [Validators.required]),
     status: new FormControl(OrderStatus.ALL),
   });
 
@@ -33,43 +35,66 @@ export class DashboardComponent {
     }
   ];
 
-  constructor(readonly toastrService: ToastrService, readonly orderService: OrderService) {}
-  
+  constructor(
+	readonly toastrService: ToastrService, 
+	readonly orderService: OrderService) {}
 
-  products: any = [
-    { Id: '1', Name: 'Produto A', Total: 100 },
-    { Id: '2', Name: 'Produto B', Total: 200 },
-    { Id: '3', Name: 'Produto C', Total: 150 },
-    { Id: '4', Name: 'Produto D', Total: 300 }
-  ];
+  orderSummary: OrderSummary = {
+	products: [],
+	revenue: 0,
+	totalClients: 0,
+	totalOrders: 0
+  }; 
 
   productData: any;
 
-  applyFilters() {
-    if (this.form.invalid) {
-      this.toastrService.warning('Preencha a data de início e fim para prosseguir');
-      return;
-    }
-    const { startDate, endDate, status } = this.form.value;
+  applyFilters(): void {
+	if (this.form.invalid) {
+	  this.toastrService.warning('Preencha a data de início e fim para prosseguir');
+	  return;
+	}
   
-	this.orderService.getSummary(startDate!, endDate!, (status === OrderStatus.ALL) ? undefined : status!)
-		.subscribe(summary => {
-			console.log(summary);
-		});
+	const { startDate, endDate, status } = this.form.value;
+  
+	if (!startDate || !endDate) {
+	  this.toastrService.warning('Datas de início e fim são obrigatórias');
+	  return;
+	}
+  
+	const selectedStatus = (status === OrderStatus.ALL ? undefined : status)!;
+  
+	this.orderService
+	  .getSummary(startDate, endDate, selectedStatus)
+	  .subscribe(this.processOrderSummary.bind(this));
+  }
+  
+  
+  processOrderSummary(summary: OrderSummary) {
+	this.orderSummary = summary;
+	const products = summary.products;
+	this.productData = {
+		labels: products.map((product: any) => product.Name),
+		datasets: [
+		  {
+			label: 'Total de Vendas',
+			data: products.map((product: any) => product.Total),
+			backgroundColor: '#42A5F5',
+			borderColor: '#1E88E5',
+			borderWidth: 1
+		  }
+		]
+	};
   }
 
+  calculateAverageTicket(totalRevenue: number, totalOrders: number): number {
+		if (totalOrders === 0) {
+			return 0;
+		}
+		return totalRevenue / totalOrders;	
+	}
+
+
   ngOnInit() {
-    this.productData = {
-      labels: this.products.map((product: any) => product.Name),
-      datasets: [
-        {
-          label: 'Total de Vendas',
-          data: this.products.map((product: any) => product.Total),
-          backgroundColor: '#42A5F5',
-          borderColor: '#1E88E5',
-          borderWidth: 1
-        }
-      ]
-    };
+	this.applyFilters();
   }
 }

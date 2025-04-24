@@ -35,8 +35,7 @@ export abstract class BaseListComponent<T> implements OnInit, OnDestroy {
     execute(obs$: Observable<PageResult<T>>) {
         this.isLoading = true;
         obs$.pipe(
-            takeUntil(this.destroy$), 
-            tap(() => this.isLoading = false))
+            takeUntil(this.destroy$))
             .subscribe(this.setItems.bind(this));
     }
 

@@ -1,11 +1,16 @@
 import { provideHttpClient } from '@angular/common/http';
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import Aura from '@primeng/themes/aura';
 import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 import { provideToastr } from 'ngx-toastr';
+import localePt from '@angular/common/locales/pt';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localePt);
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,6 +29,7 @@ export const appConfig: ApplicationConfig = {
             }
         }
       },
-    })
+    }),
+    { provide: LOCALE_ID, useValue: 'pt-BR' }
   ]
 };

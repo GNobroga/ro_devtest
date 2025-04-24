@@ -64,5 +64,13 @@ export abstract class BaseFormComponent {
       const control = this.form.get(field);
       return !!control && control.invalid && (control.dirty || control.touched);
     }
+
+    get isEdition() {
+      return this.id != null;
+    }
+
+    get modelId() {
+      return this.id!;
+    }
     
 }

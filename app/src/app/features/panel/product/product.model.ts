@@ -7,7 +7,7 @@ export interface Product {
 
 export interface CreateProduct {
     name: string;
-    price: string;
+    price: number;
     description?: string;
 }
 
@@ -21,7 +21,7 @@ export interface CreateProductResult {
 
 export interface UpdateProduct {
     name: string;
-    price: string;
+    price: number;
     description?: string;
 }
 

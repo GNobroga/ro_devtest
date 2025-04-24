@@ -56,11 +56,16 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    LoaderComponent
+  ],
   imports: [
-    CommonModule
+    CommonModule,
+    ProgressSpinnerModule,
+    DialogModule
   ],
   exports: [
     RadioButtonModule,
@@ -122,6 +127,7 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
     ReactiveFormsModule,
     CommonModule,
     RouterModule,
+    LoaderComponent
   ],
   providers: []
 })
