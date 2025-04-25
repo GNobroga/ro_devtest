@@ -5,6 +5,7 @@ import { ProductRoutingModule } from './product-routing.module';
 import { ProductService } from './product.service';
 import { ProductEditorComponent } from './product-editor/product-editor.component';
 import { SharedModule } from '../../../shared/shared.module';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 
 @NgModule({
@@ -17,7 +18,9 @@ import { SharedModule } from '../../../shared/shared.module';
     SharedModule
   ],
   providers: [
-    ProductService
+    ProductService,
+    ConfirmationService,
+    MessageService
   ]
 })
 export default class ProductModule { }

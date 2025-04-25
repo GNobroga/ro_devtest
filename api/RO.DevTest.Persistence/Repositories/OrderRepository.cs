@@ -8,6 +8,7 @@ using RO.DevTest.Persistence.Repositories;
 
 
 public class OrderRepository(DefaultContext context) : BaseRepository<Order>(context), IOrderRepository {
+
     public async Task<OrderSummaryDTO> GetOrderSummaryByPeriodAsync(DateOnly startDate, DateOnly endDate, OrderStatus? status) {
         var baseQuery = Entities.Where(o =>  
             DateOnly.FromDateTime(o.CreatedOn) >= startDate && 
@@ -19,7 +20,9 @@ public class OrderRepository(DefaultContext context) : BaseRepository<Order>(con
             .ThenInclude(op => op.Product)
             .SelectMany(o => o.OrderProducts);
 
-        var countOrders = await baseQuery.CountAsync();
+        var countOrders = await baseQuery.Include(o => o.OrderProducts)
+                            .Where(o => o.OrderProducts.Count > 0)
+                            .CountAsync();
 
         var countCustomer = await Context.Users
             .Where(u => Context.UserRoles

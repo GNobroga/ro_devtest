@@ -6,4 +6,5 @@ namespace RO.DevTest.Application.Contracts.Persistance.Repositories;
 
 public interface IOrderRepository : IBaseRepository<Order> { 
    Task<OrderSummaryDTO> GetOrderSummaryByPeriodAsync(DateOnly startDate, DateOnly endDate, OrderStatus? status);
+
 }

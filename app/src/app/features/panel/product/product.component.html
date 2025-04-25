@@ -33,6 +33,9 @@
             styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm">
       <ng-template pTemplate="header">
         <tr>
+          <th style="width: 30%"> 
+            Foto
+          </th>
           <th pSortableColumn="name" style="width: 30%">Nome <p-sortIcon field="name"></p-sortIcon></th>
           <th pSortableColumn="price" style="width: 15%">Preço <p-sortIcon field="price"></p-sortIcon></th>
           <th style="width: 40%">Descrição</th>
@@ -42,6 +45,13 @@
       
       <ng-template pTemplate="body" let-product>
         <tr>
+          <td>
+            @if (product.imageUrl) {
+              <img [src]="product.imageUrl" class="size-12 rounded-lg">
+            } @else {
+              <img src="produto-sem-imagem.png" alt="Foto de um produto sem imagem" class="size-12">
+            }
+          </td>
           <td>{{product.name}}</td>
           <td>{{product.price | currency:'BRL':'symbol':'1.2-2'}}</td>
           <td>
@@ -52,10 +62,11 @@
               <button pButton 
                       icon="pi pi-pencil" 
                       class="p-button-rounded p-button-text p-button-sm p-button-info"
-                      [routerLink]="['/products/edit', product.id]"
+                      [routerLink]="[product.id, 'edit']"
+                      [relativeTo]="activatedRoute"
                       pTooltip="Editar" tooltipPosition="top">
               </button>
-              <button pButton 
+              <button (click)="confirmDeletion($event, product.id)" pButton 
                       icon="pi pi-trash" 
                       class="p-button-rounded p-button-text p-button-sm p-button-danger"
                       
@@ -125,5 +136,11 @@
 
   
 </div>
+
+<p-toast/>
+<p-confirmdialog />
+
+<app-loader *ngIf="isLoading"/>
+
 
 <router-outlet/>

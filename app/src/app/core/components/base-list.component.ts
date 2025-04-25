@@ -1,16 +1,19 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { debounceTime, Observable, Subject, take, takeUntil, tap } from "rxjs";
+import { Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { debounceTime, finalize, Observable, Subject, take, takeUntil, tap } from "rxjs";
 import { Filter } from "../models/filter.model";
 import { PageResult } from "../models/page-result.model";
 import { PaginatorState } from "primeng/paginator";
 import { Utils } from "../utilities/utils";
 import { FormControl } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({ 
     selector: 'app-base-list',
     template: '',
 })
 export abstract class BaseListComponent<T> implements OnInit, OnDestroy {
+    
+    protected activatedRoute = inject(ActivatedRoute);
 
     protected items: T[] = [];
 
@@ -35,7 +38,7 @@ export abstract class BaseListComponent<T> implements OnInit, OnDestroy {
     execute(obs$: Observable<PageResult<T>>) {
         this.isLoading = true;
         obs$.pipe(
-            takeUntil(this.destroy$))
+            takeUntil(this.destroy$), finalize(() => this.isLoading = false))
             .subscribe(this.setItems.bind(this));
     }
 

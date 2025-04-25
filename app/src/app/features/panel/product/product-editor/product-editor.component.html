@@ -40,6 +40,20 @@
             </div>
         </div>
 
+        <div class="space-y-2">
+          <label class="flex items-center gap-2 text-gray-700 font-medium">
+            <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+              <i class="pi pi-image text-xs"></i>
+            </span>
+            URL da imagem
+          </label>
+          <div class="relative">
+            <input formControlName="imageUrl" pInputText placeholder="Ex: https://exemplo.com/imagem.jpg" class="w-full pl-10">
+            <i class="pi pi-link absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+        
+
         <!-- Campo Preço -->
         <div class="space-y-2">
             <label class="flex items-center gap-2 text-gray-700 font-medium">
@@ -81,12 +95,22 @@
             </h4>
             <div class="flex items-center gap-4">
             <div class="bg-gray-100 border border-gray-300 rounded-lg w-16 h-16 flex items-center justify-center shrink-0">
+              @if (form.get('imageUrl')?.value; as imageUrl) {
+                <img [src]="imageUrl" class="size-full"/>
+              } @else {
                 <i class="pi pi-image text-gray-400 text-xl"></i>
+              }
             </div>
             <div>
-                <h4 class="font-semibold text-gray-800">Nome do Produto</h4>
-                <p class="text-blue-600 font-bold mt-1">R$ 0,00</p>
-                <p class="text-gray-500 text-sm mt-1 line-clamp-2">Descrição aparecerá aqui...</p>
+                <h4 class="font-semibold text-gray-800">
+                  {{ hasValueInControl('name') ? getControlValue('name') : 'Nome do Produto' }}
+                </h4>
+                <p class="text-blue-600 font-bold mt-1">
+                  {{ (form.get('price')?.value | currency:'BRL':'symbol':'1.2-2':'pt-BR' ) ?? 'R$ 00,00' }}
+                </p>
+                <p class="text-gray-500 text-sm mt-1 line-clamp-2 truncate">
+                  {{ form.get('description')?.value?.trim() ?? "Descrição aparecerá aqui..."}}
+                </p>
             </div>
             </div>
         </div>

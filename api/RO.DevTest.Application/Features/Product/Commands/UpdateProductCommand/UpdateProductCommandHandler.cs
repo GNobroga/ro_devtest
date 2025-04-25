@@ -28,6 +28,7 @@ public class UpdateProductCommandHandler(IProductRepository repository) : IReque
         var product = source.AssignTo();
         target.Name = product.Name;
         target.Price = product.Price;
+        target.ImageUrl = source.ImageUrl;
         target.Description = product.Description;
     } 
 }
