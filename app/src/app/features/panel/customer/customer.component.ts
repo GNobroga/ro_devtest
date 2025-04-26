@@ -58,7 +58,7 @@ export class CustomerComponent  extends BaseListComponent<User> {
               this.service.deleteById(id)
                 .subscribe(() => {
                   this.messageService.add({ severity: 'info', detail: '1 item foi removido' });
-                  this.service.triggerListReload$.next(true);
+                  this.loadData();
                 });
             },
         });

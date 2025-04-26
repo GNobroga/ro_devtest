@@ -20,7 +20,7 @@ export class PanelComponent implements OnInit {
     {
       label: 'Perfil',
       icon: 'pi pi-user',
-      routerLink: '/panel/profile',
+      routerLink: '/admin/panel/profile',
     },
     {
       label: 'Sair',

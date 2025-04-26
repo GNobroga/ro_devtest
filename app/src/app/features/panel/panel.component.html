@@ -37,7 +37,7 @@
                     leaveActiveClass="animate-slideup"
                     class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
                 >
-                    <i class="pi pi-cog mr-2"></i>
+                    <i class="pi pi-database mr-2"></i>
                     <span class="font-medium">Operações</span>
                     <i class="pi pi-chevron-down ml-auto"></i>
                 </a>
@@ -74,7 +74,41 @@
                     </li>
                 </ul>
             </li>
-
+            <li>
+                <a
+                    pRipple
+                    pStyleClass="@next"
+                    enterFromClass="hidden"
+                    enterActiveClass="animate-slidedown"
+                    leaveToClass="hidden"
+                    leaveActiveClass="animate-slideup"
+                    class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                >
+                    <i class="pi pi-cog mr-2"></i>
+                    <span class="font-medium">Configurações</span>
+                    <i class="pi pi-chevron-down ml-auto"></i>
+                </a>
+                <ul class="list-none py-0 pl-4 pr-0 m-0 overflow-y-hidden transition-all duration-[400ms] ease-in-out">
+                    <li routerLink="/admin/panel/profile">
+                        <a  
+                            [ngClass]="getActiveRouteClasses('/admin/panel/profile')"
+                            pRipple
+                            class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                        >
+                            <i class="pi pi-user mr-2"></i>
+                            <span class="font-medium">Perfil</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a  
+                            pRipple
+                            class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+                        >
+                            <i class="pi pi-sign-out mr-2"></i>
+                            <span class="font-medium">Sair</span>
+                        </a>
+                    </li>
+                </ul>
             </ul>
     </ng-template>
     <ng-template #footer>
@@ -101,7 +135,7 @@
         <ng-template #center></ng-template>
         <ng-template #end>
         <div class="flex items-center">
-                <p-avatar label="G" styleClass="mr-2"  shape="circle" />
+                <p-avatar [label]="user()?.name?.at(0)" styleClass="mr-2"  shape="circle" />
                 <span class="text-white">{{ user()?.name }}</span>
                 <p-button styleClass="ms-3 border-none bg-transparent" size="small" (click)="menu.toggle($event)" icon="pi pi-ellipsis-v"/>
                 <p-menu #menu [model]="items" [popup]="true"/>
