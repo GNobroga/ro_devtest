@@ -11,5 +11,8 @@ public class User : IdentityUser {
     /// </summary>
     public string Name { get; set; } = string.Empty;
 
+    public DateTime CreationOn { get; set; }
+    public DateTime ModifiedOn { get; set; }
+
     public User() : base() { }
 }
