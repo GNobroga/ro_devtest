@@ -19,7 +19,6 @@ public static class PersistenceDependencyInjector {
         services.AddDbContext<DefaultContext>(options => 
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
         );
-
         return services;
     }
 }

@@ -1,4 +1,4 @@
-export interface CreateUser {
+export interface CreateOrUpdateUser {
     userName: string;
     name: string;
     email: string;
@@ -6,10 +6,11 @@ export interface CreateUser {
     passwordConfirmation: string;
 }
 
-export interface CreateUserResult {
+export interface CreateOrUpdateUserResult {
     id: string;
     userName: string;
     name: string;
     email: string;
+    roles: string[];
 }
 

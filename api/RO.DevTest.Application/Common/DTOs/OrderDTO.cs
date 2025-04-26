@@ -10,19 +10,19 @@ public record OrderProductDTO(
     int Quantity
 );
 
-public record UserDTO(
+public record OrderUserDTO(
     string Id,
     string Name,
     string Email
 );
 
-public class OrderDTO(DateTime placedAt, OrderStatus status, decimal total, UserDTO user, List<OrderProductDTO> items) {
+public class OrderDTO(DateTime placedAt, OrderStatus status, decimal total, OrderUserDTO user, List<OrderProductDTO> items) {
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderStatus Status { get; set; } = status;
     public DateTime PlacedAt { get; set; } = placedAt;
 
     public decimal Total { get; set; } = total;
-    public UserDTO User { get; set; } = user;
+    public OrderUserDTO User { get; set; } = user;
     public List<OrderProductDTO> Items  { get; set; } = items;
 }

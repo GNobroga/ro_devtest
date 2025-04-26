@@ -66,6 +66,10 @@ export abstract class BaseListComponent<T> implements OnInit, OnDestroy {
         this.filterChanged$.next(this.filters);
     }
 
+    resetKeyword() {
+        this.keyword.setValue('');
+    }
+
     onPageChange(event: PaginatorState) {
         const page = (event.page ?? 0) + 1;
         const pageSize = (event.rows ?? 100);

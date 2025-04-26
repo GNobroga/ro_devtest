@@ -17,11 +17,15 @@ public static class IQueryableExtensions {
         var bodyExpressions = properties.Select(property => {
             Expression propertyExpression = parameter;
 
-            foreach (var member in property.Split('.')) {
+            foreach (var member in property.Split('.', StringSplitOptions.RemoveEmptyEntries)) {
                 propertyExpression = Expression.PropertyOrField(propertyExpression, member);
             }
 
-            if (propertyExpression.Type != typeof(string)) {
+            if (propertyExpression.Type.IsEnum) {
+                var enumValue = Enum.Parse(propertyExpression.Type, value.ToString()!); 
+                var constant = Expression.Constant(enumValue);
+                return Expression.Equal(propertyExpression, constant) as Expression;
+            } else if (propertyExpression.Type != typeof(string)) {
                 propertyExpression =  Expression.Call(propertyExpression, "ToString", Type.EmptyTypes);
             }
             

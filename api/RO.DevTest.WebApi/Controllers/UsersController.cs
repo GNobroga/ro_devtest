@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
+using RO.DevTest.Application.DTOs;
 using RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 using RO.DevTest.Application.Features.User.Commands.DeleteUserCommand;
 using RO.DevTest.Application.Features.User.Commands.UpdateUserCommand;
 using RO.DevTest.Application.Features.User.Queries.GetPagedUsersQuery;
+using RO.DevTest.Application.Features.User.Queries.GetUserByIdQuery;
 using RO.DevTest.Domain.Enums;
 using RO.DevTest.Domain.Models;
 
@@ -24,11 +26,26 @@ public class UsersController(IMediator mediator) : Controller {
         "Email"
     ];
 
-    [Authorize(Roles = nameof(UserRoles.Admin))]
-    [HttpGet]
-    public async Task<IActionResult> GetUsers([FromQuery] PagedFilter filter) {
-        var result = await _mediator.Send(new GetPagedUsersQuery(filter, SearchFields));
-        return Ok(ApiResponse<PageResult<GetPagedUsersResult>>.FromSuccess(result));
+    //[Authorize(Roles = nameof(UserRoles.Admin))]
+    [HttpGet("customer")]
+    public async Task<IActionResult> GetCustomers([FromQuery] PagedFilter filter) {
+        return await GetUsers(filter, UserRoles.Customer);
+    }
+
+    [HttpGet("admin")]
+    public async Task<IActionResult> GetAdmins([FromQuery] PagedFilter filter) {
+       return await GetUsers(filter, UserRoles.Admin);
+    } 
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetUserById([FromRoute] string id) {
+        var result = await _mediator.Send(new GetUserByIdQuery(id));
+        return Ok(ApiResponse<UserDTO>.FromSuccess(result));
+    }
+
+    private async Task<IActionResult> GetUsers(PagedFilter filter, UserRoles role) {
+        var result = await _mediator.Send(new GetPagedUsersQuery(filter, role, SearchFields));
+        return Ok(ApiResponse<PageResult<UserDTO>>.FromSuccess(result));
     }
 
     [HttpPost("admin")]

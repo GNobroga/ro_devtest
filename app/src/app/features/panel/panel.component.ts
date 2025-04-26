@@ -13,7 +13,7 @@ export class PanelComponent implements OnInit {
 
   drawerVisible = true;
 
-  currentUrl = '/panel'
+  currentUrl = location.pathname;
 
   items: MenuItem[] = [
     {
@@ -30,6 +30,7 @@ export class PanelComponent implements OnInit {
   constructor(readonly router: Router) {}
 
   ngOnInit(): void {
+
       this.router.events.pipe(filter(e => e instanceof NavigationEnd))
         .subscribe(e => this.currentUrl = e.url);
   }
@@ -39,7 +40,8 @@ export class PanelComponent implements OnInit {
   }
 
   getActiveRouteClasses(path: string, patchMatch: 'full' | 'prefix' = 'prefix') {
-    return this.hasPathInUrl(path, patchMatch) ? 'bg-blue-600 !text-white' : '';
+    //console.log(path, this.hasPathInUrl(path, patchMatch))
+    return this.hasPathInUrl(path, patchMatch) ? 'bg-blue-600 !text-white hover:!bg-blue-500' : '';
   }
   
 }

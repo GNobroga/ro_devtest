@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using RO.DevTest.Domain.Models;
 
@@ -61,4 +62,18 @@ public interface IBaseRepository<T> where T : class {
     /// The result is <c>true</c> if any entity satisfies the predicate; otherwise, <c>false</c>.
     /// </returns>
     Task<bool> ExistsBy(Expression<Func<T, bool>> predicate);
+
+    /// <summary>
+    /// Retrieves an instance of <see cref="DbContext"/> for database access.
+    /// </summary>
+    /// <returns>
+    /// An instance of <see cref="DbContext"/> that can be used to execute queries,  
+    /// perform read and write operations, or manage transactions with the database.
+    /// </returns>
+    /// <remarks>
+    /// This method is useful for obtaining a database context in scenarios  
+    /// where dependency injection is not available or when a new instance is needed.
+    /// </remarks>
+    DbContext GetContext();
+
 }

@@ -21,8 +21,8 @@
     </ng-template>
     <ng-template #content>
         <ul class="list-none p-0 m-0 overflow-hidden">
-            <li routerLink="/panel">
-                <a [ngClass]="getActiveRouteClasses('/panel', 'full')" pRipple class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
+            <li routerLink="/admin/panel">
+                <a [ngClass]="getActiveRouteClasses('/admin/panel', 'full')" pRipple class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
                     <i class="pi pi-home mr-2"></i>
                     <span class="font-medium">Dashboard</span>
                 </a>
@@ -42,9 +42,9 @@
                     <i class="pi pi-chevron-down ml-auto"></i>
                 </a>
                 <ul class="list-none py-0 pl-4 pr-0 m-0 overflow-y-hidden transition-all duration-[400ms] ease-in-out">
-                    <li routerLink="product">
+                    <li routerLink="/admin/panel/product">
                         <a  
-                            [ngClass]="getActiveRouteClasses('/panel/product')"
+                            [ngClass]="getActiveRouteClasses('/admin/panel/product')"
                             pRipple
                             class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
                         >
@@ -52,9 +52,9 @@
                             <span class="font-medium">Produtos</span>
                         </a>
                     </li>
-                    <li>
+                    <li routerLink="/admin/panel/customer">
                         <a
-                            [ngClass]="getActiveRouteClasses('/panel/customer')"
+                            [ngClass]="getActiveRouteClasses('/admin/panel/customer')"
                             pRipple
                             class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
                         >
@@ -64,7 +64,7 @@
                     </li>
                     <li>
                         <a
-                            [ngClass]="getActiveRouteClasses('/panel/order')"
+                            [ngClass]="getActiveRouteClasses('/admin/panel/order')"
                             pRipple
                             class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
                         >

@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { BaseFormComponent } from '../../core/components/base-form.component';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { passwordMatchValidator } from '../../core/validators/password-matcher.validator';
-import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
-import { CreateUser } from '../../core/models/user.model';
-import { MessageService } from 'primeng/api';
+import { passwordMatchValidator } from '../../core/validators/password-matcher.validator';
+import { CreateOrUpdateUser } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-register',
@@ -38,7 +36,7 @@ export class RegisterComponent extends BaseFormComponent implements OnInit {
 
   register() {
     this.handleSubmit(() => {
-      this.userService.createUser(this.form.value as CreateUser, this.role.value!)
+      this.userService.createUser(this.form.value as CreateOrUpdateUser, this.role.value!)
         .subscribe(() => {
           this.toastrService.success('Conta criada com sucesso');
           this.router.navigate(['/login']);

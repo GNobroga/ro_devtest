@@ -113,4 +113,7 @@ public class BaseRepository<T>(DefaultContext defaultContext) : IBaseRepository<
         return baseQuery;
     }
 
+    public DbContext GetContext() {
+        return Context;
+    }
 }

@@ -10,7 +10,11 @@ export const routes: Routes = [
         loadChildren: () => import('./features/register/register.module'),
     },
     {
-        path: 'panel',
+        path: 'admin/panel',
         loadChildren: () => import('./features/panel/panel.module'),
+    },
+    {
+        path: '**',
+        redirectTo: 'login',
     }
 ];
