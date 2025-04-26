@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../../../core/services/base.service';
 import { OrderStatus } from './order.enum';
-import { map, Observable } from 'rxjs';
-import { OrderSummary } from './order.model';
+import { map, Observable, Subject } from 'rxjs';
+import { ChangeOrderStatusResult, DeleteOrderResult, Order, OrderSummary } from './order.model';
+import { Filter } from '../../../core/models/filter.model';
+import { PageResult } from '../../../core/models/page-result.model';
+import { QueryParamsUtils } from '../../../core/utilities/query-params';
+import { ApiResponse } from '../../../core/models/api-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,25 +17,35 @@ export class OrderService extends BaseService {
     super('order');
   }
 
+  triggerListReload$ = new Subject();
+
   getSummary(startDate: Date, endDate: Date, status?: OrderStatus): Observable<OrderSummary> {
     return this.handleRequest<OrderSummary>(
       this.httpClient.post(this.extendApiUrl('/summary'), { startDate, endDate, status })
     ).pipe(map(r => r.data!));
   }
 
-    // list(filters: Filter): Observable<PageResult<Product>> {
-    //       const filterQueryParams = QueryParamsUtils.toQueryString(filters);
-    //       return this.handleRequest<PageResult<Product>>(
-    //           this.httpClient.get(this.extendApiUrl(`?${filterQueryParams}`))
-    //       )
-    //       .pipe(map(response => response.data!));
-    //   }
-  
-    //   getById(id: string): Observable<ApiResponse<Product>> {
-    //       return this.handleRequest(
-    //           this.httpClient.get(this.extendApiUrl(`/${id}`))
-    //       );
-    //   }
+  private list(filters: Filter, endpoint = ''): Observable<PageResult<Order>> {
+      const filterQueryParams = QueryParamsUtils.toQueryString(filters);
+      return this.handleRequest<PageResult<Order>>(
+          this.httpClient.get(this.extendApiUrl(endpoint + '?' + filterQueryParams))
+      )
+      .pipe(map(response => response.data!));
+  }
+
+  listAll(filters: Filter) {
+    return this.list(filters);
+  }
+
+  listByUser(filters: Filter): Observable<PageResult<Order>> {
+    return this.list(filters, '/me');
+  }
+
+  getById(id: string): Observable<ApiResponse<Order>> {
+      return this.handleRequest(
+          this.httpClient.get(this.extendApiUrl(`/${id}`))
+      );
+  }
       
     //   create(record: CreateProduct): Observable<ApiResponse<CreateProductResult>> {
     //       return this.handleRequest(
@@ -44,11 +58,17 @@ export class OrderService extends BaseService {
     //           this.httpClient.put(this.extendApiUrl(`/${id}`), record),
     //       );
     //   }
-  
-    //   deleteById(id: string): Observable<ApiResponse<DeleteProductResult>> {
-    //       return this.handleRequest(
-    //           this.httpClient.delete(this.extendApiUrl(`/${id}`))
-    //       );
-    //   }
+
+    changeOrderStatus(id: string, status: OrderStatus): Observable<ApiResponse<ChangeOrderStatusResult>> {
+      return this.handleRequest(
+        this.httpClient.put(this.extendApiUrl(`/${id}/status`), { status })
+      );
+    }
+
+    deleteById(id: string): Observable<ApiResponse<DeleteOrderResult>> {
+        return this.handleRequest(
+            this.httpClient.delete(this.extendApiUrl(`/${id}`))
+        );
+    }
 
 }

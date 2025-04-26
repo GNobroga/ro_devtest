@@ -12,6 +12,6 @@ public class GetUserByIdQueryHandler(IUserRepository repository) : IRequestHandl
     public async Task<UserDTO> Handle(GetUserByIdQuery request, CancellationToken cancellationToken) {
         var result = _repository.Get(u => u.Id.Equals(request.UserId)) ??
             throw new EntityNotFoundException("Usuário não encontrado");
-       return await Task.FromResult(UserMapper.ToDTO(result));
+        return await Task.FromResult(UserMapper.ToDTO(result));
     }
 }

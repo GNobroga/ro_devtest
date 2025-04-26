@@ -11,6 +11,7 @@ using RO.DevTest.Application.Features.Order.Commands.DeleteOrderCommand;
 using RO.DevTest.Application.Features.Order.Queries.GetAllOrdersQuery;
 using RO.DevTest.Application.Features.Order.Queries.GetOrdersByUserQuery;
 using RO.DevTest.Application.Features.Order.Queries.GetOrderSummaryByPeriodQuery;
+using RO.DevTest.Application.Features.Order.Queries.GetOrderByIdQuery;
 using RO.DevTest.Domain.Enums;
 using RO.DevTest.Domain.Models;
 
@@ -41,6 +42,12 @@ public class OrderController(IMediator mediator, IAuthService authService) : Con
         var query = new GetOrdersByUserQuery(userId, filter, SearchFields);
         var result = await _mediator.Send(query);
         return Ok(ApiResponse<PageResult<OrderDTO>>.FromSuccess(result));
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById([FromRoute] Guid id) {
+        var result = await _mediator.Send(new GetOrderByIdQuery(id));
+        return Ok(ApiResponse<OrderDTO>.FromSuccess(result));
     }
 
 

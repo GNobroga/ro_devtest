@@ -9,6 +9,17 @@ export interface LoginCredentials {
     password: string;
 }
 
+
+export interface TokenPayload {
+    iss: number;
+    unique_name: string;
+    email: string;
+    sub: string;
+    role: string;
+    exp: number;
+    aud: string;
+}
+
 export interface TokenInfo {
     accessToken: string;
     refreshToken: string;

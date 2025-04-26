@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, effect, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { filter } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-panel',
@@ -27,7 +28,13 @@ export class PanelComponent implements OnInit {
     }
   ];
 
-  constructor(readonly router: Router) {}
+  user = computed(() => this.authService.user());
+
+  constructor(readonly router: Router, readonly authService: AuthService) {
+    effect(() => {
+      console.log(this.user());
+    });
+  }
 
   ngOnInit(): void {
 

@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { CoreModule } from '../../core/core.module';
 import { SharedModule } from '../../shared/shared.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PanelRoutingModule } from './panel-routing.module';
 import { PanelComponent } from './panel.component';
 import { ProductComponent } from './product/product.component';
 import { ProfileComponent } from './profile/profile.component';
-import { OrderModule } from './order/order.module';
 
 
 @NgModule({
@@ -21,7 +21,7 @@ import { OrderModule } from './order/order.module';
     CommonModule,
     PanelRoutingModule,
     SharedModule,
-    OrderModule
+    CoreModule
   ],
   providers: []
 })

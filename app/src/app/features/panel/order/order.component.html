@@ -29,29 +29,39 @@
               [value]="items"
               styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm">
         <ng-template pTemplate="header">
-          <tr>
-            <th pSortableColumn="name" style="width: 30%">Nome <p-sortIcon field="name"></p-sortIcon></th>
-            <th pSortableColumn="price" style="width: 15%">E-mail</th>
-            <th style="width: 40%">Usuário</th>
-            <th style="width: 15%; min-width: 120px">Ações</th>
-          </tr>
+            <tr>
+                <th pSortableColumn="name" style="width: 20%">Nome <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="price" style="width: 20%">E-mail <p-sortIcon field="price"></p-sortIcon></th>
+                <th style="width: 15%">Quantidade</th>
+                <th style="width: 15%">Total</th>
+                <th style="width: 20%">Status</th>
+                <th style="width: 10%; min-width: 140px;">Ações</th>
+            </tr>
         </ng-template>
         
-        <ng-template pTemplate="body" let-customer>
+        <ng-template pTemplate="body" let-order>
           <tr>
-            <td>{{customer.name}}</td>
-            <td>{{customer.email}}</td>
-            <td>
-              <p class="line-clamp-2 text-gray-700">{{customer.userName }}</p>
-            </td>
+            <td>{{order.user.name}}</td>
+            <td>{{order.user.email}}</td>
+            <td>{{order.items.length}}</td>
+            <td>{{order.total}}</td>
+            <td>{{order.status}}</td>
             <td>
               <div class="flex gap-2">
-                <button (click)="confirmDeletion($event, customer.id)" pButton 
+                <button
+                        [routerLink]="[order.id, 'details']"
+                        pButton 
+                        icon="pi pi-eye" 
+                        class="p-button-rounded p-button-text p-button-sm p-button-info"
+                        pTooltip="Visualizar" tooltipPosition="top">
+                </button>
+                <button (click)="confirmDeletion($event, order.id)" pButton 
                         icon="pi pi-trash" 
                         class="p-button-rounded p-button-text p-button-sm p-button-danger"
                         
                         pTooltip="Excluir" tooltipPosition="top">
                 </button>
+
               </div>
             </td>
           </tr>
@@ -59,9 +69,9 @@
         
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="4" class="text-center py-8 text-gray-500">
+            <td colspan="6" class="text-center py-8 text-gray-500">
               <i class="pi pi-search text-2xl mb-2"></i>
-              <p>Nenhum cliente encontrado</p>
+              <p>Nenhum pedido encontrado</p>
             </td>
           </tr>
         </ng-template>
@@ -76,15 +86,15 @@
       </p-table>
       <div class="card flex justify-center">
         <p-paginator 
-          [showCurrentPageReport]="true" 
-          [rowsPerPageOptions]="[5, 20, 30]"
-          [showFirstLastIcon]="true"
-          [showPageLinks]="true"
-          [rows]="pageResult.pageSize"
-          currentPageReportTemplate="Mostrando página {currentPage} de {totalPages}, com {totalRecords} registros"
-          (onPageChange)="onPageChange($event)"
-          [totalRecords]="pageResult.totalItems"
-    />
+            [showCurrentPageReport]="true" 
+            [rowsPerPageOptions]="[5, 20, 30]"
+            [showFirstLastIcon]="true"
+            [showPageLinks]="true"
+            [rows]="pageResult.pageSize"
+            currentPageReportTemplate="Mostrando página {currentPage} de {totalPages}, com {totalRecords} registros"
+            (onPageChange)="onPageChange($event)"
+            [totalRecords]="pageResult.totalItems"
+        />
       </div>
     </p-card>
   
@@ -115,9 +125,8 @@
   </div>
   
   <p-toast/>
-  <p-confirmdialog />
+<p-confirmdialog />
   
-  <!-- <app-loader *ngIf="isLoading"/> -->
-  
-  
-  <router-outlet/>
+<app-loader *ngIf="isLoading"/>
+
+<router-outlet/>

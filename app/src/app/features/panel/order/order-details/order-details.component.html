@@ -1,0 +1,212 @@
+<div class="bg-black bg-opacity-80 fixed inset-0 min-h-screen w-full flex items-center justify-center z-[9999] p-4 overflow-y-auto">
+    <div *ngIf="order" class="bg-white animate-enter fade-in-10 slide-in-from-l-2 animate-duration-200  rounded-xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden animate-fadeIn">
+      <!-- Cabeçalho com botão de fechar -->
+      <div class="flex justify-between items-center p-6 border-b sticky top-0 bg-white z-10">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+            <span>Pedido #{{ order.id }}</span>
+            <p-tag [value]="order.status" 
+                    [severity]="getStatusSeverity(order.status)"
+                   class="px-3 py-1 font-medium"></p-tag>
+          </h2>
+          <div class="flex items-center gap-2 mt-1 text-gray-500">
+            <i class="pi pi-calendar"></i>
+            <span>{{ order.placedAt | date:'dd/MM/yyyy • HH:mm' }}</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <p-button icon="pi pi-times" 
+                    severity="secondary" 
+                    (click)="closeModal()"
+                    [text]="true"
+                    [rounded]="true"
+                    aria-label="Fechar"></p-button>
+        </div>
+      </div>
+  
+      <!-- Corpo com scroll -->
+      <div class="overflow-y-auto flex-1 p-6">
+        <!-- Seção rápida de informações -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <!-- Card Cliente -->
+          <p-card class="transition-all">
+            <div class="flex items-start gap-4">
+              <div class="bg-blue-50 p-3 rounded-full flex-shrink-0">
+                <i class="pi pi-user text-blue-500 text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-700 mb-2">Cliente</h3>
+                <p class="font-medium text-gray-900">{{ order.user.name }}</p>
+                <p class="text-gray-600 flex items-center gap-2 mt-1">
+                  <i class="pi pi-envelope text-gray-400"></i>
+                  {{ order.user.email }}
+                </p>
+              </div>
+            </div>
+          </p-card>
+  
+          <!-- Card Resumo -->
+          <p-card class="transition-all">
+            <div class="flex items-start gap-4">
+              <div class="bg-green-50 p-3 rounded-full flex-shrink-0">
+                <i class="pi pi-shopping-cart text-green-500 text-xl"></i>
+              </div>
+              <div class="w-full">
+                <h3 class="font-semibold text-gray-700 mb-3">Resumo</h3>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <p class="text-xs text-gray-500">Itens</p>
+                    <p class="font-bold text-lg">{{ order.items.length }}</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-gray-500">Valor Total</p>
+                    <p class="font-bold text-green-600 text-lg">{{ order.total | currency:'BRL' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p-card>
+  
+          <!-- Card Ações -->
+          <p-card class="transition-all">
+            <div class="flex items-start gap-4">
+              <div class="bg-orange-50 p-3 rounded-full flex-shrink-0">
+                <i class="pi pi-cog text-orange-500 text-xl"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-gray-700 mb-3">Ações</h3>
+                <div class="flex flex-col gap-2">
+                  <p-button label="Marcar como Pago" 
+                           icon="pi pi-check" 
+                           severity="success" 
+                           (click)="updateOrderStatus('Cancelled')"
+                           size="small"
+                           [disabled]="order.status === 'Cancelled' || order.status === 'Paid'"
+                          
+                  
+                           class="w-full"></p-button>
+                  <p-button label="Cancelar Pedido" 
+                           icon="pi pi-times" 
+                           (click)="updateOrderStatus('Paid')"
+                           severity="danger" 
+                           size="small"
+                           [disabled]="order.status === 'Cancelled' || order.status === 'Paid'"
+                         
+                           [outlined]="true"
+                           class="w-full"></p-button>
+                </div>
+              </div>
+            </div>
+          </p-card>
+        </div>
+  
+        <!-- Itens do pedido -->
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+            <i class="pi pi-list"></i>
+            <span>Itens do Pedido</span>
+          </h3>
+          
+          <div class="border rounded-lg overflow-hidden">
+            <p-table [value]="order.items" 
+                    [rows]="5" 
+                    [paginator]="order.items.length > 5"
+                    [scrollable]="true"
+                    scrollHeight="flex"
+                    styleClass="p-datatable-sm p-datatable-striped">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width: 50px"></th>
+                  <th>Produto</th>
+                  <th class="text-right">Preço Unit.</th>
+                  <th class="text-right">Qtd.</th>
+                  <th class="text-right">Subtotal</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+                <tr [class.bg-gray-50]="rowIndex % 2 === 0">
+                  <td>
+                    <img [src]="item.imageUrl || 'assets/placeholder-product.png'" 
+                        [alt]="item.name" 
+                        class="w-10 h-10 object-cover rounded-md border" />
+                  </td>
+                  <td>
+                    <div class="font-medium">{{ item.name }}</div>
+                    <div class="text-xs text-gray-500">ID: {{ item.id | slice:0:8 }}</div>
+                  </td>
+                  <td class="text-right font-medium">{{ item.price | currency:'BRL' }}</td>
+                  <td class="text-right">
+                    <span class="inline-block min-w-[30px] text-center">{{ item.quantity }}</span>
+                  </td>
+                  <td class="text-right font-bold">{{ (item.price * item.quantity) | currency:'BRL' }}</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="footer">
+                <tr class="bg-gray-100">
+                  <td colspan="3"></td>
+                  <td class="text-right font-bold">Total:</td>
+                  <td class="text-right font-bold text-primary text-lg">{{ order.total | currency:'BRL' }}</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="5" class="text-center py-5 text-gray-500">Nenhum item encontrado</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+  
+        <!-- Status do pedido -->
+        <div class="bg-gray-50 rounded-lg p-4 mb-6" *ngIf="order.status === 'Cancelled'">
+          <div class="flex items-start gap-3">
+            <i class="pi pi-exclamation-circle text-red-500 text-xl mt-1"></i>
+            <div>
+              <h4 class="font-bold text-red-700 mb-1">Pedido Cancelado</h4>
+              <p class="text-sm text-gray-600">Este pedido foi cancelado em {{ order.modifiedOn | date:'dd/MM/yyyy' }} e não está mais ativo.</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Timeline do pedido -->
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+            <i class="pi pi-history"></i>
+            <span>Histórico</span>
+          </h3>
+          <div class="border-l-2 border-gray-200 pl-4 ml-3 space-y-4">
+            <div class="relative">
+              <div class="absolute w-3 h-3 bg-primary-500 rounded-full -left-[15px] top-1 border-2 border-white"></div>
+              <div class="bg-gray-50 rounded-lg p-3">
+                <p class="font-medium">Pedido criado</p>
+                <p class="text-sm text-gray-500">{{ order.placedAt | date:'dd/MM/yyyy • HH:mm' }}</p>
+              </div>
+            </div>
+            <div class="relative" *ngIf="order.status === 'Paid'">
+              <div class="absolute w-3 h-3 bg-green-500 rounded-full -left-[15px] top-1 border-2 border-white"></div>
+              <div class="bg-gray-50 rounded-lg p-3">
+                <p class="font-medium">Pagamento confirmado</p>
+                <p class="text-sm text-gray-500">{{ order.modifiedOn | date:'dd/MM/yyyy • HH:mm' }}</p>
+              </div>
+            </div>
+            <div class="relative" *ngIf="order.status === 'Cancelled'">
+              <div class="absolute w-3 h-3 bg-red-500 rounded-full -left-[15px] top-1 border-2 border-white"></div>
+              <div class="bg-gray-50 rounded-lg p-3">
+                <p class="font-medium">Pedido cancelado</p>
+                <p class="text-sm text-gray-500">{{ order.modifiedOn | date:'dd/MM/yyyy • HH:mm' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Rodapé com ações -->
+      <div class="border-t p-4 bg-gray-50 flex justify-between items-center">
+        <p-button label="Voltar" 
+                 icon="pi pi-arrow-left" 
+                 severity="secondary" 
+                 size="small"
+                 [outlined]="true"></p-button>
+      </div>
+    </div>
+  </div>

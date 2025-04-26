@@ -1,6 +1,4 @@
-using System.Security.Cryptography;
 using RO.DevTest.Application.DTOs;
-using static RO.DevTest.Application.DTOs.OrderDTO;
 
 
 namespace RO.DevTest.Application.Common.Mappers;
@@ -15,12 +13,14 @@ public static class OrderMapper {
                 op.Product.Id,
                 op.Product.Name,
                 op.Product.Price,
-                op.Quantity))
+                op.Quantity, 
+                op.Product.ImageUrl
+            ))
             .ToList();
 
         var total = items.Sum(item => item.Price * item.Quantity);
-
-        return new OrderDTO(order.CreatedOn, order.Status, total, user, items);
+  
+        return new OrderDTO(order.Id, order.CreatedOn, order.ModifiedOn, order.Status, total, user, items);
     }
 
 

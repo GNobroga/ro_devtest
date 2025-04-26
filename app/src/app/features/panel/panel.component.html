@@ -62,7 +62,7 @@
                             <span class="font-medium">Clientes</span>
                         </a>
                     </li>
-                    <li>
+                    <li routerLink="/admin/panel/order">
                         <a
                             [ngClass]="getActiveRouteClasses('/admin/panel/order')"
                             pRipple
@@ -102,7 +102,7 @@
         <ng-template #end>
         <div class="flex items-center">
                 <p-avatar label="G" styleClass="mr-2"  shape="circle" />
-                <span class="text-white">Gabriel Cardoso Girarde</span>
+                <span class="text-white">{{ user()?.name }}</span>
                 <p-button styleClass="ms-3 border-none bg-transparent" size="small" (click)="menu.toggle($event)" icon="pi pi-ellipsis-v"/>
                 <p-menu #menu [model]="items" [popup]="true"/>
         </div>

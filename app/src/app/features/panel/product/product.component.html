@@ -104,12 +104,17 @@
       </ng-template>
     </p-table>
     <div class="card flex justify-center">
-        <p-paginator 
-            [rows]="pageResult.pageSize"
-            [totalRecords]="pageResult.totalItems"
-            (onPageChange)="onPageChange($event)" 
-            [pageLinkSize]="5"
-            [rowsPerPageOptions]="[5, 20, 30]" />
+      <p-paginator 
+        [showCurrentPageReport]="true" 
+        [rowsPerPageOptions]="[10, 20, 30]"
+        [showFirstLastIcon]="true"
+        [pageLinkSize]="10"
+        [showPageLinks]="true"
+        [rows]="pageResult.pageSize"
+        currentPageReportTemplate="Mostrando página {currentPage} de {totalPages}, com {totalRecords} registros"
+        (onPageChange)="onPageChange($event)"
+        [totalRecords]="pageResult.totalItems"
+    />
     </div>
   </p-card>
 
@@ -142,7 +147,7 @@
 <p-toast/>
 <p-confirmdialog />
 
-<!-- <app-loader *ngIf="isLoading"/> -->
+<app-loader *ngIf="isLoading"/>
 
 
 <router-outlet/>

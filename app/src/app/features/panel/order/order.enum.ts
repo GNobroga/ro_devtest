@@ -5,3 +5,14 @@ export enum OrderStatus  {
     PAID = 2,
     PENDING = 3,
 }
+
+export const OrderStatusUtils = {
+    parse(status: 'Cancelled' | 'Paid' | 'Pending'): OrderStatus {
+        const key = status.toUpperCase() as keyof typeof OrderStatus;
+        const parsed = OrderStatus[key];
+        if (parsed === undefined) {
+            throw new Error(`Invalid status: ${status}`);
+        }
+        return parsed;
+    }
+};

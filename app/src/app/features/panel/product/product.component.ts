@@ -58,9 +58,9 @@ export class ProductComponent extends BaseListComponent<Product>{
           },
           accept: () => {
             this.service.deleteById(id)
-              .subscribe(() => {
+              .subscribe(resp => {
                 this.messageService.add({ severity: 'info', detail: '1 item foi removido' });
-                this.service.triggerListReload$.next(true);
+                this.loadData();
               });
           },
       });
