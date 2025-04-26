@@ -20,5 +20,4 @@ export class Utils {
     
         return false;
     }
-    
 }

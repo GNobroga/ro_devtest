@@ -1,14 +1,16 @@
 import { Injectable } from "@angular/core";
 import { map, Observable, Subject } from "rxjs";
-import { User } from "../models/auth.model";
 import { Filter } from "../models/filter.model";
 import { PageResult } from "../models/page-result.model";
-import { CreateOrUpdateUser } from "../models/user.model";
+import { CreateOrUpdateUser, DeleteUserResult, User } from "../models/user.model";
 import { QueryParamsUtils } from "../utilities/query-params";
 import { BaseService } from "./base.service";
 import { ApiResponse } from "../models/api-response.model";
+import { Utils } from "../utilities/utils";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class UserService extends BaseService {
     
     triggerListReload$ = new Subject();
@@ -50,6 +52,10 @@ export class UserService extends BaseService {
     }
 
     updateAdmin(id: string, record: CreateOrUpdateUser) {
+        if (Utils.isNullOrWhitespace(record.password)) {
+            Reflect.deleteProperty(record, 'password');
+            Reflect.deleteProperty(record, 'passwordConfirmation');
+        }
         return this.handleRequest(
             this.httpClient.put(this.extendApiUrl(`/admin/${id}`), record)
         );
@@ -68,8 +74,6 @@ export class UserService extends BaseService {
     }
 
     deleteById(id: string) {
-        return this.handleRequest(
-            this.httpClient.delete(this.extendApiUrl(`/${id}`))
-        );
+        return this.httpClient.delete<ApiResponse<DeleteUserResult>>(this.extendApiUrl(`/${id}`))
     }
 }

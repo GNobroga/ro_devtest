@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { BaseListComponent } from '../../../core/components/base-list.component';
-import { User } from '../../../core/models/auth.model';
 import { UserService } from '../../../core/services/user.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { mergeAll, of, takeUntil } from 'rxjs';
 import { Filter } from '../../../core/models/filter.model';
+import { User } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-customer',

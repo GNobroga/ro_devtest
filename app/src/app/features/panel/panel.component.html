@@ -99,7 +99,7 @@
                             <span class="font-medium">Perfil</span>
                         </a>
                     </li>
-                    <li>
+                    <li (click)="authService.logout()">
                         <a  
                             pRipple
                             class="flex items-center cursor-pointer p-4 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
@@ -134,9 +134,10 @@
         </ng-template>
         <ng-template #center></ng-template>
         <ng-template #end>
-        <div class="flex items-center">
-                <p-avatar [label]="user()?.name?.at(0)" styleClass="mr-2"  shape="circle" />
-                <span class="text-white">{{ user()?.name }}</span>
+        <div *ngIf="authService.userSubject.getValue()" class="flex items-center">
+                @let user = authService.userSubject.getValue()!;
+                <p-avatar [label]="user.name.at(0)" styleClass="mr-2"  shape="circle" />
+                <span class="text-white">{{ user.name }}</span>
                 <p-button styleClass="ms-3 border-none bg-transparent" size="small" (click)="menu.toggle($event)" icon="pi pi-ellipsis-v"/>
                 <p-menu #menu [model]="items" [popup]="true"/>
         </div>

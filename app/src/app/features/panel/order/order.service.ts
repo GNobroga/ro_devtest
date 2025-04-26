@@ -66,9 +66,7 @@ export class OrderService extends BaseService {
     }
 
     deleteById(id: string): Observable<ApiResponse<DeleteOrderResult>> {
-        return this.handleRequest(
-            this.httpClient.delete(this.extendApiUrl(`/${id}`))
-        );
+        return this.httpClient.delete<ApiResponse<DeleteOrderResult>>(this.extendApiUrl(`/${id}`));
     }
 
 }

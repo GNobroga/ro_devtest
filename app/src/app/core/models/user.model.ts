@@ -14,3 +14,16 @@ export interface CreateOrUpdateUserResult {
     roles: string[];
 }
 
+export interface DeleteUserResult {
+    userId: string;
+    deleted: boolean;
+}
+
+export interface User {
+    id: string;
+    userName: string;
+    name: string;
+    email: string;
+    creationOn: Date;
+    modifiedOn: Date;
+}

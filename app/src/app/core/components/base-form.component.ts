@@ -1,15 +1,15 @@
-import { Component, inject, Input } from "@angular/core";
+import { Component, inject, Input, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { ApiResponse } from "../models/api-response.model";
 
 @Component({
   selector: 'app-base-form',
   template: '',
 })
-export abstract class BaseFormComponent {
+export abstract class BaseFormComponent implements OnDestroy {
 
     @Input()
     protected id: string | null = null;
@@ -24,7 +24,7 @@ export abstract class BaseFormComponent {
 
     protected toastrService = inject(ToastrService);
 
-    protected onUpdate?: Observable<ApiResponse<any>>;
+    destroy$ = new Subject();
 
     handleSubmit(callback: VoidFunction) {
       if (this.form.invalid) {
@@ -73,4 +73,7 @@ export abstract class BaseFormComponent {
       return this.id!;
     }
     
+    ngOnDestroy(): void {
+        this.destroy$.next(true);
+    }
 }

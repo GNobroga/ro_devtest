@@ -1,14 +1,16 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using RO.DevTest.Application.Common.Mappers;
 using RO.DevTest.Application.Contracts.Infrastructure;
+using RO.DevTest.Application.DTOs;
 using RO.DevTest.Application.Extensions;
 using RO.DevTest.Domain.Enums;
 using RO.DevTest.Domain.Exception;
 namespace RO.DevTest.Application.Features.User.Commands.UpdateUserCommand;
 
-public class UpdateUserCommandHandler(IIdentityAbstractor identityAbstractor) : IRequestHandler<UpdateUserCommand, UpdateUserResult> {
+public class UpdateUserCommandHandler(IIdentityAbstractor identityAbstractor) : IRequestHandler<UpdateUserCommand, UserDTO> {
     private readonly IIdentityAbstractor _identityAbstractor = identityAbstractor;
-    public async Task<UpdateUserResult> Handle(UpdateUserCommand request, CancellationToken cancellationToken) {
+    public async Task<UserDTO> Handle(UpdateUserCommand request, CancellationToken cancellationToken) {
         await request.ThrowIfInvalidCommandAsync(new UpdateUserCommandValidator());
 
         var user = await _identityAbstractor.FindUserByIdAsync(request.UserId);
@@ -47,14 +49,11 @@ public class UpdateUserCommandHandler(IIdentityAbstractor identityAbstractor) : 
 
         await Task.WhenAll(tasks);
 
-        var roles = await _identityAbstractor.GetUserRolesAsync(user);
-    
-        return new UpdateUserResult(user, (List<string>) roles);
+        return UserMapper.ToDTO(user);
     }
 
-    private void EnsureSuccessOrThrow(IdentityResult result) {
-        if (result == null)
-            throw new ArgumentNullException(nameof(result));
+    private static void EnsureSuccessOrThrow(IdentityResult result) {
+        ArgumentNullException.ThrowIfNull(result);
 
         if (!result.Succeeded) {
             var errors = result.Errors.Select(e => $"{e.Code}: {e.Description}");

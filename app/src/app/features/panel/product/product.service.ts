@@ -43,8 +43,6 @@ export class ProductService extends BaseService {
     }
 
     deleteById(id: string): Observable<ApiResponse<DeleteProductResult>> {
-        return this.handleRequest(
-            this.httpClient.delete(this.extendApiUrl(`/${id}`))
-        );
+        return this.httpClient.delete<ApiResponse<DeleteProductResult>>(this.extendApiUrl(`/${id}`))
     }
 }

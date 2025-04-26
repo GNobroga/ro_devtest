@@ -10,8 +10,6 @@ import { MessageService } from 'primeng/api';
     CommonModule
   ],
   providers: [
-    AuthService,
-    UserService,
     MessageService
   ]
 })

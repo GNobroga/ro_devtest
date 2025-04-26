@@ -38,7 +38,7 @@ export abstract class BaseService {
                 delay(100),
                 catchError((err: HttpErrorResponse) => {
                     const response = err.error as ApiResponse<any>;
-                    const statusCode = response.statusCode;
+                    const statusCode = response?.statusCode;
                     const toastr = (statusCode === 400) ? this.toastrService.warning : this.toastrService.error;
 
                     if (Object.hasOwn(response, 'messages')) {

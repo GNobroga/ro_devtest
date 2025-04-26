@@ -1,5 +1,5 @@
-<div *ngIf="user()" class="px-6 pt-5 max-w-6xl mx-auto">
-    @let loggedUser = user()!;
+<div *ngIf="authService.userSubject.getValue()" class="px-6 pt-5 max-w-6xl mx-auto">
+    @let user = authService.userSubject.getValue()!;
     <!-- Breadcrumb melhorado -->
       <!-- Breadcrumb estilizado -->
       <div class="flex justify-between items-center">
@@ -21,19 +21,21 @@
             <div class="flex gap-6 items-center">
                 <!-- Avatar com borda decorativa -->
                 <div class="relative">
-                    <p-avatar label="G" shape="circle" size="xlarge" class="!w-20 !h-20 text-3xl" 
+                    <p-avatar [label]="user.name.at(0)" shape="circle" size="xlarge" class="!w-20 !h-20 text-3xl" 
                             />
                     <span class="absolute -bottom-2 -right-2 bg-green-500 rounded-full w-5 h-5 border-2 border-white"></span>
                 </div>
                 <span class="flex flex-col">
-                    <span class="text-xl font-bold text-gray-800">{{ loggedUser.name }}</span>
-                    <span class="text-gray-600">{{ loggedUser.email }}</span>
-                    <span class="text-sm text-gray-500 mt-1">Membro desde Janeiro 2023 {{ loggedUser. }}</span>
+                    <span class="text-xl font-bold text-gray-800">{{ user.name }}</span>
+                    <span class="text-gray-600">{{ user.email }}</span>
+                    <span class="text-sm text-gray-500 mt-1">
+                        Membro desde {{ user.creationOn | date:'dd \'de\' MMMM \'de\' yyyy' }}
+                    </span>                    
                 </span>
             </div>
             
             <!-- Botão de edição com ícone -->
-            <button (click)="isEditingProfile.set(true)" pButton type="button" icon="pi pi-pencil" label="Editar Perfil" 
+            <button (click)="isEditingProfile.next(true)" pButton type="button" icon="pi pi-pencil" label="Editar Perfil" 
                     class="!px-5 !py-2.5 bg-indigo-600 hover:bg-indigo-700 border-indigo-600 mt-4 md:mt-0">
             </button>
         </div>
@@ -42,7 +44,7 @@
         <div class="border-t border-gray-200 mx-6"></div>
         
         <!-- Formulário de perfil -->
-        <div class="px-8 py-6 bg-white" [formGroup]="form">
+        <form class="px-8 py-6 bg-white" [formGroup]="form" (ngSubmit)="updateProfile()">
             <h2 class="text-lg font-semibold text-gray-800 mb-6">Informações Pessoais</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -51,6 +53,12 @@
                     <label class="block text-sm font-medium text-gray-700">Nome Completo</label>
                     <input formControlName="name" pInputText class="w-full" placeholder="Seu nome completo" 
                            value="Gabriel Cardoso Girarde" />
+                    <p-message 
+                        *ngIf="isFieldInvalid('name')" 
+                        severity="error" 
+                        class="mt-1 text-sm">
+                        {{ getErrorMessage('name') }}
+                    </p-message>
                     <p class="text-xs text-gray-500">Como você prefere ser chamado</p>
                 </div>
                 
@@ -63,6 +71,12 @@
                             <input formControlName="userName" pInputText class="w-full" placeholder="Seu nome de usuário" 
                                 value="gabrielcg" />
                         </div>
+                        <p-message 
+                                *ngIf="isFieldInvalid('userName')" 
+                                severity="error" 
+                                class="mt-1 text-sm">
+                                {{ getErrorMessage('userName') }}
+                            </p-message>
                         <p class="text-xs text-gray-500">Usado para login</p>
                     </div>
                     
@@ -70,16 +84,32 @@
                     <div class="space-y-1">
                         <label class="block text-sm font-medium text-gray-700">Email</label>
                         <input formControlName="email" pInputText class="w-full" type="email" defaultValue="gabreilcardosogirarde@gmail.com" />
+                        <p-message 
+                            *ngIf="isFieldInvalid('email')" 
+                            severity="error" 
+                            class="mt-1 text-sm">
+                            {{ getErrorMessage('email') }}
+                        </p-message>
                     </div>
                 </div>
                 
-                
-                <div class="col-span-2 gap-6 grid grid-cols-2">
+                <span class="flex items-center gap-2">
+                    <p-checkbox [formControl]="displayPasswordControl" [binary]="true" />
+                    <label>Quer mudar sua senha?</label>
+                </span>
+
+                <div *ngIf="displayPasswordControl.valueChanges | async" class="col-span-2 gap-6 grid grid-cols-2">
                        <!-- Campo Senha -->
                     <div class="space-y-1">
                         <label class="block text-sm font-medium text-gray-700">Nova Senha</label>
                         <p-password formControlName="password" styleClass="mt-2" fluid [toggleMask]="true" [feedback]="true" inputClass="w-full" 
                                     placeholder="Digite uma nova senha"></p-password>
+                        <p-message 
+                            *ngIf="isFieldInvalid('password')"
+                            severity="error" 
+                            class="mt-1 text-sm">
+                            {{ getErrorMessage('password')}}
+                        </p-message>
                     </div>
                     
                     <!-- Campo Confirmação de Senha -->
@@ -87,18 +117,22 @@
                         <label class="block text-sm font-medium text-gray-700">Confirme a Nova Senha</label>
                         <p-password  formControlName="passwordConfirmation" styleClass="mt-2" fluid [toggleMask]="true" inputClass="w-full" 
                                     placeholder="Repita a nova senha"></p-password>
+                        <p-message 
+                            *ngIf="isFieldInvalid('passwordConfirmation')"
+                            severity="error" 
+                            class="mt-1 text-sm">
+                            {{ getErrorMessage('passwordConfirmation')}}
+                        </p-message>
                     </div>
                 </div>
             </div>
             
             <!-- Seção de ações -->
             <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-gray-200">
-                <button pButton type="button" label="Cancelar" 
-                        class="!px-6 !py-2.5 !text-gray-700 !bg-gray-100 hover:!bg-gray-200"></button>
-                <button pButton type="button" label="Salvar Alterações" 
-                        class="!px-6 !py-2.5 !bg-indigo-600 hover:!bg-indigo-700"></button>
+                <button (click)="updateProfile()" [disabled]="form.disabled" pButton type="button" label="Salvar Alterações" 
+                        class="!px-6 !py-2.5 bg-indigo-600 hover:bg-indigo-700"></button>
             </div>
-        </div>
+        </form>
     </p-card>
     
 </div>

@@ -27,10 +27,3 @@ export interface TokenInfo {
     expirationDate: Date;
     roles: string[];
 }
-
-export interface User {
-    id: string;
-    userName: string;
-    name: string;
-    email: string;
-}

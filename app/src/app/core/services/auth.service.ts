@@ -1,18 +1,23 @@
-import { Injectable, signal, Signal, WritableSignal } from "@angular/core";
+import { Injectable, signal } from "@angular/core";
 import { Router } from "@angular/router";
-import { lastValueFrom, map, Observable, tap } from "rxjs";
 import { jwtDecode } from "jwt-decode";
+import { BehaviorSubject, lastValueFrom, map, Observable, tap } from "rxjs";
 import { ApiResponse } from "../models/api-response.model";
-import { LoginCredentials, TokenInfo, TokenPayload, TokenStorage, User } from "../models/auth.model";
+import { LoginCredentials, TokenInfo, TokenPayload, TokenStorage } from "../models/auth.model";
 import { BaseService } from "./base.service";
 import { UserService } from "./user.service";
+import { User } from "../models/user.model";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class AuthService extends BaseService {
 
     private readonly TOKEN_KEY = "auth_tokens";
 
-    readonly user = signal<User | null>(null);
+    readonly userSubject = new BehaviorSubject<User | null>(null);
+
+    readonly user$ = this.userSubject.asObservable();
 
     constructor(readonly router: Router, readonly userService: UserService) {
         super("auth");
@@ -39,7 +44,8 @@ export class AuthService extends BaseService {
             this.setTokenStorage({ accessToken, refreshToken });
             this.loadUserProfile()?.subscribe();
         } catch (ex) {
-            throw new Error((ex as Error)?.message ?? 'não foi possível carregar o token através do refresh token');
+            console.error('não foi possível carregar o token através do refresh token');
+            this.logout();
         }
     }
     
@@ -56,18 +62,21 @@ export class AuthService extends BaseService {
                         this.router.navigate(['/shop']);
                     }
                 });
+                this.toastrService.success('Login realizado com sucesso!');
             }));
     }
 
     logout() {
         this.clearTokenStorage();
-        this.router.navigate(['/login']);
+        this.router.navigate(['/login']).then(() => {
+            this.toastrService.success('Você saiu do sistema. Até logo!');
+        });
     }
 
     getNewAccessToken(refreshToken: string): Observable<TokenInfo> {
         return this.handleRequest<TokenInfo>(this.httpClient.post(this.extendApiUrl("/exchange-token"), {
             refreshToken
-        })).pipe(map(r => r.data!));
+    })).pipe(map(r => r.data!));
     }
 
     get isAuthenticated() {
@@ -99,7 +108,7 @@ export class AuthService extends BaseService {
         if (!this.isAuthenticated) return;
         const sub = this.tokenPayload?.sub!;
         return this.userService.getById(sub).pipe(tap(response => {
-            this.user.set(response.data!);
+            this.userSubject.next(response.data!);
         }));
     }
 

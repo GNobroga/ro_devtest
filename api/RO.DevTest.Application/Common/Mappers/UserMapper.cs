@@ -4,6 +4,6 @@ namespace RO.DevTest.Application.Common.Mappers;
 
 public static class UserMapper {
     public static UserDTO ToDTO(Domain.Entities.User src) {
-        return new UserDTO(src.Id, src.UserName!, src.Name, src.Email!);
+        return new UserDTO(src.Id, src.UserName!, src.Name, src.Email!, src.CreationOn, src.ModifiedOn);
     }
 }

@@ -1,7 +1,9 @@
 ﻿using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using RO.DevTest.Application.Common.Mappers;
 using RO.DevTest.Application.Contracts.Infrastructure;
+using RO.DevTest.Application.DTOs;
 using RO.DevTest.Domain.Exception;
 
 namespace RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
@@ -9,10 +11,10 @@ namespace RO.DevTest.Application.Features.User.Commands.CreateUserCommand;
 /// <summary>
 /// Command handler for the creation of <see cref="Domain.Entities.User"/>
 /// </summary>
-public class CreateUserCommandHandler(IIdentityAbstractor identityAbstractor) : IRequestHandler<CreateUserCommand, CreateUserResult> {
+public class CreateUserCommandHandler(IIdentityAbstractor identityAbstractor) : IRequestHandler<CreateUserCommand, UserDTO> {
     private readonly IIdentityAbstractor _identityAbstractor = identityAbstractor;
 
-    public async Task<CreateUserResult> Handle(CreateUserCommand request, CancellationToken cancellationToken) {
+    public async Task<UserDTO> Handle(CreateUserCommand request, CancellationToken cancellationToken) {
         CreateUserCommandValidator validator = new();
         ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
 
@@ -34,7 +36,7 @@ public class CreateUserCommandHandler(IIdentityAbstractor identityAbstractor) : 
             throw new BadRequestException(userRoleResult);
         }
 
-        return new CreateUserResult(newUser);
+        return UserMapper.ToDTO(newUser);
     }
 
     private async Task ThrowIfEmailAlreadyExistsAsync(string email) {

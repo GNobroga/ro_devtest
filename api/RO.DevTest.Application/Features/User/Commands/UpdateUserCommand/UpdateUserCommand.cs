@@ -1,9 +1,10 @@
 using MediatR;
+using RO.DevTest.Application.DTOs;
 using RO.DevTest.Domain.Enums;
 
 namespace RO.DevTest.Application.Features.User.Commands.UpdateUserCommand;
 
-public class UpdateUserCommand(string userId) : IRequest<UpdateUserResult> {
+public class UpdateUserCommand(string userId) : IRequest<UserDTO> {
 
     public string UserId { get; set; } = userId;
     public string? UserName { get; set; }

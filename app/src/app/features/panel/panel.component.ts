@@ -28,12 +28,8 @@ export class PanelComponent implements OnInit {
     }
   ];
 
-  user = computed(() => this.authService.user());
-
   constructor(readonly router: Router, readonly authService: AuthService) {
-    effect(() => {
-      console.log(this.user());
-    });
+
   }
 
   ngOnInit(): void {
