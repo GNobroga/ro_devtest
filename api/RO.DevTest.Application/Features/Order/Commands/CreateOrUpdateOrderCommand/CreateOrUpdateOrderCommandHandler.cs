@@ -51,7 +51,7 @@ public class CreateOrUpdateOrderCommandHandler(
 
         foreach(var item in MergeDuplicateOrderProducts(request.Items)) {
             var product = new Domain.Entities.Product(item.ProductId);
-            order.AddOrderProduct(new OrderProduct(item.ProductId, order.Id, item.Quantity));
+            order.AddOrderProduct(new OrderProduct(item.ProductId, order.Id, product.Price, item.Quantity));
         }
 
         await _repository.CreateAsync(order, cancellationToken);

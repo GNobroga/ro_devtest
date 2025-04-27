@@ -13,7 +13,7 @@ public static class OrderMapper {
             .Select(op => new OrderProductDTO(
                 op.Product.Id,
                 op.Product.Name,
-                op.Product.Price,
+                op.UnitPrice,
                 op.Quantity, 
                 op.Product.ImageUrl
             ))

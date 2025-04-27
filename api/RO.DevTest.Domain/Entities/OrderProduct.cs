@@ -12,11 +12,14 @@ public class OrderProduct : BaseEntity {
 
     public int Quantity { get; set; } = 1;
 
+    public decimal UnitPrice { get; set; }
+
     public OrderProduct() {}
 
-    public OrderProduct(Guid productId, Guid orderId, int quantity) {
+    public OrderProduct(Guid productId, Guid orderId, decimal price, int quantity) {
         OrderId = orderId;
         ProductId = productId;
         Quantity = quantity;
+        UnitPrice = price;
     }
 }
