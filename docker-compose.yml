@@ -1,7 +1,30 @@
 version: '3.8'
 
 services:
-  postgres:
+
+  api:
+    build: 
+      context: ./
+      dockerfile: .docker/api/Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
+    networks:
+      - rodev_network
+
+  app:
+    build:
+      context: ./
+      dockerfile: .docker/app/Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+    networks:
+      - rodev_network
+
+  database:
     image: postgres:latest
     container_name: postgres_rodevtest
     environment:

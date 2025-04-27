@@ -9,6 +9,7 @@ public static class ApiServiceExtensions {
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddCustomCors();
         services.AddScoped<ApiExceptionMiddleware>();
         
         services.AddAuthenticationServices(builder.Configuration);
