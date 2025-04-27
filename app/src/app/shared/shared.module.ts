@@ -56,6 +56,7 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { LoaderComponent } from './components/loader/loader.component';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { LoaderComponent } from './components/loader/loader.component';
     ConfirmDialogModule,
     InputNumberModule,
     ScrollerModule,
+    ConfirmPopupModule,
     DynamicDialogModule,
     PaginatorModule,
     ChipModule,

@@ -26,12 +26,13 @@ export class CartService  {
 
     constructor(readonly orderService: OrderService, readonly toastrService: ToastrService) {}
 
-    createOrder() {
+    createOrder(callback?: () => void) {
         const items = this.items().map(({ productId, quantity }) => ({ productId, quantity }) as OrderItemCreateOrUpdate);
         if (items.length > 0) {
             this.orderService.create({ items }).subscribe(() => {
                 this.clearCart();
                 this.toastrService.success("Seu pedido foi realizado com sucesso");
+                callback?.();
             });
         }
     }

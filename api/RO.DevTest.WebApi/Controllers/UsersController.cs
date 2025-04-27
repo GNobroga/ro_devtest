@@ -26,23 +26,25 @@ public class UsersController(IMediator mediator) : Controller {
         "Email"
     ];
 
-    //[Authorize(Roles = nameof(UserRoles.Admin))]
+    [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpGet("customer")]
     public async Task<IActionResult> GetCustomers([FromQuery] PagedFilter filter) {
         return await GetUsers(filter, UserRoles.Customer);
     }
 
+    [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpGet("admin")]
     public async Task<IActionResult> GetAdmins([FromQuery] PagedFilter filter) {
        return await GetUsers(filter, UserRoles.Admin);
     } 
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserById([FromRoute] string id) {
         var result = await _mediator.Send(new GetUserByIdQuery(id));
         return Ok(ApiResponse<UserDTO>.FromSuccess(result));
     }
-
+    
     private async Task<IActionResult> GetUsers(PagedFilter filter, UserRoles role) {
         var result = await _mediator.Send(new GetPagedUsersQuery(filter, role, SearchFields));
         return Ok(ApiResponse<PageResult<UserDTO>>.FromSuccess(result));

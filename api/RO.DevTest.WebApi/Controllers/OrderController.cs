@@ -30,6 +30,7 @@ public class OrderController(IMediator mediator, IAuthService authService) : Con
       "User.Id"
     ];
 
+    [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpPost("summary")]
     public async Task<IActionResult> GetOrderSummary(GetOrderSummaryByPeriodQuery request) {
         var result = await _mediator.Send(request);
@@ -45,6 +46,7 @@ public class OrderController(IMediator mediator, IAuthService authService) : Con
         return Ok(ApiResponse<PageResult<OrderDTO>>.FromSuccess(result));
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id) {
         var result = await _mediator.Send(new GetOrderByIdQuery(id));
@@ -67,7 +69,7 @@ public class OrderController(IMediator mediator, IAuthService authService) : Con
         return Created(HttpContext.Request.GetDisplayUrl(), ApiResponse<OrderDTO>.FromSuccess(result));
     }
 
-    [Authorize(Roles = nameof(UserRoles.Admin))]
+    [Authorize]
     [HttpPut("{id}/status")]
     public async Task<IActionResult> ChangeOrderStatus([FromRoute] Guid id, ChangeOrderStatusCommand request) {
        request.OrderId = id;
@@ -75,7 +77,7 @@ public class OrderController(IMediator mediator, IAuthService authService) : Con
        return Ok(ApiResponse<ChangeOrderStatusResult>.FromSuccess(result));
     }
 
-    [Authorize]
+    [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpPost("{id}")]
     public async Task<IActionResult> UpdateOrder([FromRoute] Guid id, CreateOrUpdateOrderCommand request) {
         request.OrderId = id;
@@ -83,7 +85,7 @@ public class OrderController(IMediator mediator, IAuthService authService) : Con
         return Ok(ApiResponse<OrderDTO>.FromSuccess(result));
     }
 
-    [Authorize(Roles = nameof(UserRoles.Admin))]
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteOrder([FromRoute] Guid id) {
         DeleteOrderCommand command = new(id);

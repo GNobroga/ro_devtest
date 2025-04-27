@@ -126,7 +126,7 @@
               <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
                 <tr [class.bg-gray-50]="rowIndex % 2 === 0">
                   <td>
-                    <img [src]="item.imageUrl || 'assets/placeholder-product.png'" 
+                    <img [src]="item.imageUrl || 'produto-sem-imagem.png'" 
                         [alt]="item.name" 
                         class="w-10 h-10 object-cover rounded-md border" />
                   </td>

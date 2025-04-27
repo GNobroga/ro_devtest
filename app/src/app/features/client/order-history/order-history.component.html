@@ -17,7 +17,7 @@
     </div>
   
     <!-- Tabela aprimorada -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
         <p-table [value]="items" [paginator]="true" [rows]="10" 
                 [rowsPerPageOptions]="[5,10,20,50]" [showCurrentPageReport]="true"
                 currentPageReportTemplate="{totalRecords} pedidos no total"
@@ -52,20 +52,13 @@
                     <td class="text-gray-600">
                         <div class="flex items-center gap-1">
                             <span>{{order.items.length}} {{order.items.length === 1 ? 'item' : 'itens'}}</span>
-                            <button pButton pRipple icon="pi pi-info-circle" 
-                                    class="p-button-rounded p-button-text p-button-sm !text-gray-400 hover:!text-gray-600"
-                                
-                                    pTooltip="Ver itens" tooltipPosition="top"></button>
                         </div>
                     </td>
                     <td class="text-center">
                         <button pButton pRipple icon="pi pi-eye" 
                                 class="p-button-rounded p-button-outlined p-button-secondary p-button-sm"
-                                [routerLink]="['/pedidos', order.id]"
+                                [routerLink]="['/client/order-history', order.id, 'details']"
                                 pTooltip="Ver detalhes" tooltipPosition="top"></button>
-                        <button *ngIf="order.status === 'PENDING'" pButton pRipple icon="pi pi-times" 
-                                class="p-button-rounded p-button-outlined p-button-danger p-button-sm ml-2"
-                                pTooltip="Cancelar pedido" tooltipPosition="top"></button>
                     </td>
                 </tr>
             </ng-template>
@@ -97,8 +90,10 @@
     <div class="mt-6 bg-blue-50 border border-blue-100 rounded-lg p-4 flex items-start gap-3">
         <i class="pi pi-info-circle text-blue-400 mt-1"></i>
         <div>
-            <a href="https://github.com/GNobroga" class="font-medium text-blue-800">Precisa de ajuda com algum pedido?</a>
-            <p class="text-blue-600 text-sm">Entre em contato com nosso <a href="#" class="underline font-medium">atendimento ao cliente</a> caso tenha dúvidas sobre seus pedidos.</p>
+            <p class="font-medium text-blue-800">Precisa de ajuda com algum pedido?</p>
+            <p class="text-blue-600 text-sm">Entre em contato com nosso <a href="https://github.com/GNobroga" class="underline font-medium">atendimento ao cliente</a> caso tenha dúvidas sobre seus pedidos.</p>
         </div>
     </div>
 </div>
+
+<router-outlet/>

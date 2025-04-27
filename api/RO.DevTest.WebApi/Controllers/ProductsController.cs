@@ -30,7 +30,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
         "Description"
     ];
 
-    //[Authorize]
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(ApiResponse<PageResult<ProductDTO>>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
@@ -41,7 +41,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
         return Ok(response);
     }
 
-    //[Authorize(Roles = nameof(UserRoles.Admin))]
+    [Authorize]
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ApiResponse<ProductDTO>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -51,7 +51,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
         return Ok(ApiResponse<ProductDTO>.FromSuccess(result));
     }
 
-   // [Authorize(Roles = nameof(UserRoles.Admin))]
+    [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpDelete("{id}")]
     [ProducesResponseType(typeof(ApiResponse<DeleteProductResult>), StatusCodes.Status200OK)]
     public async Task<IActionResult> DeleteProductById(Guid id) {
@@ -61,7 +61,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
         return Ok(ApiResponse<DeleteProductResult>.FromSuccess(result));
     }
     
-   // [Authorize(Roles = nameof(UserRoles.Admin))]
+    [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<CreateProductResult>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -72,7 +72,7 @@ public class ProductsController(IMediator mediator) : ControllerBase {
        return CreatedAtAction(nameof(GetProductById), new { id = productId }, response); 
     }
 
-   // [Authorize(Roles = nameof(UserRoles.Admin))]
+    [Authorize(Roles = nameof(UserRoles.Admin))]
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(ApiResponse<CreateProductResult>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]

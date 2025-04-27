@@ -8,6 +8,7 @@ import { MenuItem } from 'primeng/api';
 import { CartItem, CartService } from './services/cart.service';
 import { AuthService } from '../../core/services/auth.service';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-client',
@@ -41,7 +42,8 @@ export class ClientComponent implements OnInit, OnDestroy {
   constructor(
     readonly cartService: CartService, 
     readonly authService: AuthService,
-    readonly productService: ProductService
+    readonly productService: ProductService,
+    readonly router: Router
   ) {}
   
   ngOnInit(): void {
@@ -51,6 +53,12 @@ export class ClientComponent implements OnInit, OnDestroy {
 
     this.cartService.cartItems$.subscribe(cartItems => {
         this.cartVisible = cartItems.length > 0;
+    });
+  }
+
+  createOrder() {
+    this.cartService.createOrder(() => {
+      this.router.navigate(['/client/order-history']);
     });
   }
 

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ClientComponent } from './client.component';
 import { StoreComponent } from './store/store.component';
 import { OrderHistoryComponent } from './order-history/order-history.component';
+import { OrderDetailsComponent } from './order-details/order-details.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,12 @@ const routes: Routes = [
       {
         path: 'order-history',
         component: OrderHistoryComponent,
+        children: [
+          {
+            path: ':id/details',
+            component: OrderDetailsComponent,
+          }
+        ]
       }
     ]
   }

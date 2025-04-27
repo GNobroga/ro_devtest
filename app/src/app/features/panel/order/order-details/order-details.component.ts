@@ -52,7 +52,8 @@ export class OrderDetailsComponent implements OnInit {
   updateOrderStatus(status: 'Cancelled' | 'Paid' | 'Pending') {
     this.service.changeOrderStatus(this.id, OrderStatusUtils.parse(status))
       .subscribe(() => {
-        
+        this.service.triggerListReload$.next(true);
+        this.closeModal();
       });
   }
 
