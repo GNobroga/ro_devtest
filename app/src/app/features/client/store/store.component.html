@@ -1,8 +1,8 @@
 <main class="container mx-auto px-4 py-8">
     <!-- Grid de Produtos -->
-    <div class="flex flex-wrap gap-5 [&>p-card]:flex-1">
+    <div class="gap-5 grid grid-cols-4">
       <p-card *ngFor="let product of items"
-              styleClass="bg-white border shadow-lg  border-gray-100 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-indigo-100">
+              styleClass="bg-white border border-black border-opacity-20 shadow-lg   rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-indigo-100">
         
         <!-- Imagem do Produto -->
         <div class="relative h-64 overflow-hidden flex items-center justify-center">
@@ -72,56 +72,92 @@
   
 <!-- Modal (Dialog) de Visualizar Produto -->
 <p-dialog [(visible)]="productDialogVisible" [modal]="true" [dismissableMask]="true"
-          [style]="{width: '90vw', maxWidth: '600px'}" [breakpoints]="{'960px': '90vw'}" [baseZIndex]="10000">
+          [style]="{width: '90vw', maxWidth: '800px'}" [breakpoints]="{'960px': '90vw'}" [baseZIndex]="10000"
+          [draggable]="false" [resizable]="false" [closeOnEscape]="true">
   
   <ng-template pTemplate="header">
     <div class="flex items-center gap-3">
-      <img *ngIf="selectedProduct?.imageUrl" [src]="selectedProduct?.imageUrl" alt="{{ selectedProduct?.name }}" class="w-10 h-10 object-contain" />
-      <span class="text-lg font-semibold">{{ selectedProduct?.name }}</span>
+      <img *ngIf="selectedProduct?.imageUrl" [src]="selectedProduct?.imageUrl" alt="{{ selectedProduct?.name }}" 
+           class="w-12 h-12 object-cover rounded-lg shadow-sm" />
+      <div>
+        <h3 class="text-xl font-bold text-gray-800">{{ selectedProduct?.name }}</h3>
+        <div class="text-indigo-600 font-semibold text-lg">
+          R$ {{ selectedProduct?.price | number: '1.2-2' }}
+        </div>
+      </div>
     </div>
   </ng-template>
 
-  <div class="flex flex-col gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
     <!-- Imagem em destaque -->
-    <div class="rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center h-72">
-      <img [src]="selectedProduct?.imageUrl" alt="{{ selectedProduct?.name }}" class="object-contain max-h-full max-w-full" />
+    <div class="rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center h-80 p-4 border border-gray-200">
+      <img [src]="selectedProduct?.imageUrl" alt="{{ selectedProduct?.name }}" 
+           class="object-contain max-h-full max-w-full transition-transform duration-300 hover:scale-105 cursor-zoom-in" />
     </div>
 
-    <!-- Descrição -->
-    <p class="text-gray-600 text-sm leading-relaxed">
-      {{ selectedProduct?.description }}
-    </p>
+    <!-- Detalhes do produto -->
+    <div class="flex flex-col gap-6">
+      <!-- Descrição -->
+      <div>
+        <h4 class="font-semibold text-gray-700 mb-2">Descrição</h4>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          {{ selectedProduct?.description || "Nenhuma descrição disponível" }}
+        </p>
+      </div>
 
-    <!-- Quantidade e Preço -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-      
       <!-- Seletor de Quantidade -->
-      <div class="flex items-center gap-4">
-        <label for="quantity" class="font-medium text-gray-700">Quantidade:</label>
-        <div class="flex items-center border rounded overflow-hidden">
-          <button type="button" class="px-3 py-1 text-gray-600 hover:bg-gray-200" (click)="decreaseQuantity()">-</button>
-          <input type="number" id="quantity" [(ngModel)]="selectedQuantity" min="1"
-                class="w-16 text-center border-l border-r outline-none" />
-          <button type="button" class="px-3 py-1 text-gray-600 hover:bg-gray-200" (click)="increaseQuantity()">+</button>
+      <div>
+        <h4 class="font-semibold text-gray-700 mb-3">Quantidade</h4>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+            <button type="button" 
+                    class="px-4 py-2 text-gray-600 hover:bg-gray-100 transition-colors"
+                    (click)="decreaseQuantity()"
+                    [disabled]="selectedQuantity <= 1">
+              <i class="pi pi-minus"></i>
+            </button>
+            <input type="number" id="quantity" [(ngModel)]="selectedQuantity" min="1" max="99"
+                  class="w-16 text-center border-x border-gray-300 outline-none focus:ring-2 focus:ring-indigo-200" />
+            <button type="button" 
+                    class="px-4 py-2 text-gray-600 hover:bg-gray-100 transition-colors"
+                    (click)="increaseQuantity()">
+              <i class="pi pi-plus"></i>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Preço -->
-      <div class="text-indigo-600 text-2xl font-bold">
-        R$ {{ selectedProduct?.price | number: '1.2-2' }}
+      <!-- Total -->
+      <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+        <div class="flex justify-between items-center">
+          <span class="font-medium text-gray-700">Total:</span>
+          <span class="text-2xl font-bold text-indigo-600">
+            R$ {{ (selectedProduct?.price! * selectedQuantity) | number: '1.2-2' }}
+          </span>
+        </div>
       </div>
 
-    </div>
-
-    <!-- Botão Adicionar -->
-    <div class="flex justify-end">
-      <button pButton 
-              label="Adicionar ao Carrinho" 
-              icon="pi pi-cart-plus"
-              (click)="addToCart(selectedProduct!)"
-              class="p-button-lg p-button-rounded bg-indigo-600 hover:bg-indigo-700 border-indigo-600 text-white shadow-md transition-all">
-      </button>
+      <!-- Botões de Ação -->
+      <div class="flex flex-col sm:flex-row gap-3 mt-2">
+        <button pButton 
+                label="Adicionar ao Carrinho" 
+                icon="pi pi-shopping-cart"
+                (click)="addToCart(selectedProduct!)"
+                class="p-button-lg bg-indigo-600 hover:bg-indigo-700 border-indigo-600 text-white shadow-md transition-all flex-1">
+        </button>
+      </div>
     </div>
   </div>
 
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2">
+      <button pButton 
+            severity="info"
+            [text]="true"
+            label="Continuar Comprando" 
+            (click)="productDialogVisible = false"
+           >
+      </button>
+    </div>
+  </ng-template>
 </p-dialog>
