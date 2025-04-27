@@ -17,19 +17,22 @@ public class GetPagedUsersQueryHandler(IUserRepository repository) : IRequestHan
     private IdentityDbContext<Domain.Entities.User> Context => (IdentityDbContext<Domain.Entities.User>) _repository.GetContext();
     public async Task<PageResult<UserDTO>> Handle(GetPagedUsersQuery request, CancellationToken cancellationToken) {
         var roleName = request.Role.ToString();
-        var adminRoleId = Context.Roles
-            .Where(r => r.Name == roleName)
-            .Select(r => r.Id)
-            .FirstOrDefault();
+   
 
-        var userIdsWithAdminRole = Context.UserRoles
-            .Where(ur => ur.RoleId == adminRoleId)
-            .Select(ur => ur.UserId);
+        var result = await _repository.GetPagedAndSortedResultsAsync(request.Filter, request.SearchFields, query => {
+            var adminRoleId = Context.Roles
+                .Where(r => r.Name == roleName)
+                .Select(r => r.Id)
+                .FirstOrDefault();
 
-       Expression<Func<Domain.Entities.User, bool>> predicate = u => userIdsWithAdminRole.Contains(u.Id);
+            var userIdsWithAdminRole = Context.UserRoles
+                .Where(ur => ur.RoleId == adminRoleId)
+                .Select(ur => ur.UserId);
 
+            Expression<Func<Domain.Entities.User, bool>> predicate = u => userIdsWithAdminRole.Contains(u.Id);
 
-        var result = await _repository.GetPagedAndSortedResultsAsync(request.Filter, request.SearchFields, predicate);
+           return query.Where(predicate);
+        });
 
         return result.Map(UserMapper.ToDTO);
     }

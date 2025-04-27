@@ -15,11 +15,6 @@ public class GetAllOrdersQueryHandler(IOrderRepository repository) : IRequestHan
     
     private readonly IOrderRepository _repository = repository;
 
-   private static readonly Func<IQueryable<Domain.Entities.Order>, IIncludableQueryable<Domain.Entities.Order, object>>[] IncludeNavigations = [
-        query => query.Include(o => o.User),
-        query => query.Include(o => o.OrderProducts).ThenInclude(op => op.Product)
-    ];
-
     public async Task<PageResult<OrderDTO>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken) {
         var filter = request.Filter;
         var searchFields = request.SearchFields ?? Enumerable.Empty<string>();
@@ -27,7 +22,11 @@ public class GetAllOrdersQueryHandler(IOrderRepository repository) : IRequestHan
         var result = await _repository.GetPagedAndSortedResultsAsync(
             filter: filter, 
             properties: searchFields.ToArray(), 
-            includes: IncludeNavigations
+            query => {
+                return query.Include(o => o.User)
+                        .Include(o => o.OrderProducts)
+                        .ThenInclude(op => op.Product);
+            }
         );
         
         return result.Map(OrderMapper.ToDTO);

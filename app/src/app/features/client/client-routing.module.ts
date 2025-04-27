@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ClientComponent } from './client.component';
+import { StoreComponent } from './store/store.component';
+import { OrderHistoryComponent } from './order-history/order-history.component';
 
 const routes: Routes = [
   {
@@ -14,7 +16,11 @@ const routes: Routes = [
     children: [
       {
         path: 'store',
-        loadChildren: () => import('./store/store.module'),
+        component: StoreComponent,
+      },
+      {
+        path: 'order-history',
+        component: OrderHistoryComponent,
       }
     ]
   }

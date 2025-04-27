@@ -59,7 +59,7 @@ export class AuthService extends BaseService {
                     if (this.tokenPayload?.role.includes('Admin')) {
                         this.router.navigate(['/admin/panel']);
                     } else {
-                        this.router.navigate(['/shop']);
+                        this.router.navigate(['/client']);
                     }
                 });
                 this.toastrService.success('Login realizado com sucesso!');

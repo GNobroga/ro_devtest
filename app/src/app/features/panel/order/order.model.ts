@@ -44,3 +44,12 @@ export interface DeleteOrderResult {
 export interface ChangeOrderStatusResult {
     newStatus: OrderStatus;
 }
+
+export interface OrderItemCreateOrUpdate {
+    productId: string;
+    quantity: number;
+}
+
+export interface CreateOrUpdateOrder {
+    items: OrderItemCreateOrUpdate[];
+}

@@ -1,6 +1,10 @@
 import { Injectable, signal } from "@angular/core";
 import { Product } from "../../panel/product/product.model";
 import { BehaviorSubject } from "rxjs";
+import { BaseService } from "../../../core/services/base.service";
+import { OrderService } from "../../panel/order/order.service";
+import { OrderItem, OrderItemCreateOrUpdate } from "../../panel/order/order.model";
+import { ToastrService } from "ngx-toastr";
 
 export interface CartItem {
     productId: string;
@@ -13,12 +17,24 @@ export interface CartItem {
 @Injectable({
     providedIn: 'root'
 })
-export class CartService {
+export class CartService  {
 
     items = signal<CartItem[]>([]);
     
     private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
     cartItems$ = this.cartItemsSubject.asObservable();
+
+    constructor(readonly orderService: OrderService, readonly toastrService: ToastrService) {}
+
+    createOrder() {
+        const items = this.items().map(({ productId, quantity }) => ({ productId, quantity }) as OrderItemCreateOrUpdate);
+        if (items.length > 0) {
+            this.orderService.create({ items }).subscribe(() => {
+                this.clearCart();
+                this.toastrService.success("Seu pedido foi realizado com sucesso");
+            });
+        }
+    }
 
     addItem(item: CartItem): void {
         const items = this.items();

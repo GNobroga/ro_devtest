@@ -8,6 +8,7 @@ public static class OrderMapper {
     public static OrderDTO ToDTO(Domain.Entities.Order order) {
         var user = new OrderUserDTO(order.User.Id, order.User.Name, order.User.Email!);
 
+
         var items = order.OrderProducts
             .Select(op => new OrderProductDTO(
                 op.Product.Id,

@@ -24,7 +24,7 @@ public interface IBaseRepository<T> where T : class {
     /// </param>
     /// <returns>
     /// The <typeparamref name="T"/> entity, if found. Null otherwise. </returns>
-    T? Get(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
+    T? Get(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IQueryable<T>>? queryInterceptor = default);
 
     /// <summary>
     /// Updates an entity entry on the database
@@ -49,8 +49,7 @@ public interface IBaseRepository<T> where T : class {
     Task<PageResult<T>> GetPagedAndSortedResultsAsync(
         PagedFilter filter, 
         IEnumerable<string>? properties= default, 
-        Expression<Func<T, bool>>? baseFilter = default,
-        IEnumerable<Func<IQueryable<T>, IIncludableQueryable<T, object>>>? includes = default);
+        Func<IQueryable<T>, IQueryable<T>>? queryInterceptor = default);
 
 
     /// <summary>

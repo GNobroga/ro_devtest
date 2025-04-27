@@ -17,20 +17,15 @@ public class BaseRepository<T>(DefaultContext defaultContext) : IBaseRepository<
     public async Task<PageResult<T>> GetPagedAndSortedResultsAsync(
         PagedFilter filter, 
         IEnumerable<string>? properties = default, 
-        Expression<Func<T, bool>>? baseFilter = default,
-        IEnumerable<Func<IQueryable<T>, IIncludableQueryable<T, object>>>? includes = default
+        Func<IQueryable<T>, IQueryable<T>>? queryInterceptor = default
     ) {
         properties ??= [];
-        baseFilter ??= e => true;
-        includes ??= [];
+
 
         var baseQuery = Entities.WhereContainsIgnoreCaseMultiple(filter.Keyword, properties)
-            .Where(baseFilter)
             .AsNoTracking();
 
-        foreach(var include in includes) {
-            baseQuery = include(baseQuery);
-        }
+        baseQuery = queryInterceptor?.Invoke(baseQuery) ?? baseQuery;
 
         var page = filter.Page;
         var pageSize = filter.PageSize;
@@ -62,8 +57,8 @@ public class BaseRepository<T>(DefaultContext defaultContext) : IBaseRepository<
         await Context.SaveChangesAsync();
     }
 
-    public T? Get(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
-    => GetQueryWithIncludes(predicate, includes).FirstOrDefault();
+    public T? Get(Expression<Func<T, bool>> predicate,  Func<IQueryable<T>, IQueryable<T>>? queryInterceptor = default)
+    => GetQueryWithIncludes(predicate, queryInterceptor).FirstOrDefault();
 
     /// <summary>
     /// Generates a filtered <see cref="IQueryable{T}"/>, based on its
@@ -81,14 +76,12 @@ public class BaseRepository<T>(DefaultContext defaultContext) : IBaseRepository<
     /// </returns>
     private IQueryable<T> GetQueryWithIncludes(
         Expression<Func<T, bool>> predicate,
-        params Expression<Func<T, object>>[] includes
+        Func<IQueryable<T>, IQueryable<T>>? queryInterceptor = default
     ) {
         IQueryable<T> baseQuery = GetWhereQuery(predicate);
 
-        foreach(Expression<Func<T, object>> include in includes) {
-            baseQuery = baseQuery.Include(include);
-        }
-
+        baseQuery = queryInterceptor?.Invoke(baseQuery) ?? baseQuery;
+        
         return baseQuery;
     }
 

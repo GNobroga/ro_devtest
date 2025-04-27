@@ -5,11 +5,15 @@ import { ClientRoutingModule } from './client-routing.module';
 import { ClientComponent } from './client.component';
 import { SharedModule } from '../../shared/shared.module';
 import ProductModule from '../panel/product/product.module';
+import { OrderHistoryComponent } from './order-history/order-history.component';
+import { StoreComponent } from './store/store.component';
 
 
 @NgModule({
   declarations: [
-    ClientComponent
+    ClientComponent,
+    OrderHistoryComponent,
+    StoreComponent
   ],
   imports: [
     CommonModule,

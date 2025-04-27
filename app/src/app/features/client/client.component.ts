@@ -6,6 +6,7 @@ import { last, mergeAll, of, takeUntil } from 'rxjs';
 import { Filter } from '../../core/models/filter.model';
 import { MenuItem } from 'primeng/api';
 import { CartItem, CartService } from './services/cart.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-client',
@@ -19,10 +20,12 @@ export class ClientComponent implements OnInit {
     {
       label: 'Meus pedidos',
       icon: 'pi pi-shopping-bag', // ícone de pedidos
+      routerLink: '/client/order-history',
     },
     {
       label: 'Sair',
-      icon: 'pi pi-sign-out', // ícone de sair
+      icon: 'pi pi-sign-out', 
+      command: () => this.authService.logout(),
     }
   ];
 
@@ -30,13 +33,11 @@ export class ClientComponent implements OnInit {
 
   cartVisible = false;
 
-  constructor(readonly cartService: CartService) {}
+  constructor(readonly cartService: CartService, readonly authService: AuthService) {}
   
   ngOnInit(): void {
     this.cartService.cartItems$.subscribe(cartItems => {
-      if (cartItems.length) {
-        this.cartVisible = true;
-      }
-    })
+        this.cartVisible = cartItems.length > 0;
+    });
   }
 }

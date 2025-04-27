@@ -1,0 +1,53 @@
+<div class="container mx-auto px-4 py-8">
+    <!-- Breadcrumb estilizado -->
+    <div class="mb-6 flex justify-between items-center">
+        <p-breadcrumb [model]="breadcrumbs" styleClass="border-none bg-white rounded-lg px-4 py-2 shadow-sm" />
+    </div>
+
+    <h1 class="text-3xl font-bold text-gray-800 mb-8">Histórico de Pedidos</h1>
+  
+    <div class="bg-white shadow rounded-lg">
+      <p-table [value]="items" [paginator]="true" [rows]="5" 
+               [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
+               currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+               [globalFilterFields]="['id','status','total']">
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="id">Nº do Pedido <p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="placedAt">Data <p-sortIcon field="placedAt"></p-sortIcon></th>
+            <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+            <th pSortableColumn="total">Total <p-sortIcon field="total"></p-sortIcon></th>
+            <th>Itens</th>
+            <th>Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order>
+          <tr>
+            <td class="font-medium">{{order.id}}</td>
+            <td>{{ order.placedAt | date: 'd \'de\' MMMM \'de\' yyyy' }}</td>
+            <td>
+              <span class="px-3 py-1 rounded-full text-sm font-medium"
+                    [ngClass]="getStatusClass(order.status)">
+                {{translateStatus(order.status)}}
+              </span>
+            </td>
+            <td class="font-medium">R$ {{order.total.toFixed(2).replace('.', ',')}}</td>
+            <td>{{order.items.length}} {{order.items.length === 1 ? 'item' : 'itens'}}</td>
+            <td>
+              <button pButton pRipple icon="pi pi-eye" 
+                      class="p-button-rounded p-button-text"
+                      [routerLink]="['/pedidos', order.id]"
+                      pTooltip="Ver detalhes" tooltipPosition="top"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center py-8 text-gray-500">
+              Nenhum pedido encontrado
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+</div>

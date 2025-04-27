@@ -12,20 +12,18 @@ public class GetOrdersByUserQueryHandler(IOrderRepository repository) : IRequest
 
     private readonly IOrderRepository _repository = repository;
 
-    private static readonly Func<IQueryable<Domain.Entities.Order>, IIncludableQueryable<Domain.Entities.Order, object>>[] IncludeNavigations = [
-        query => query.Include(o => o.User),
-        query => query.Include(o => o.OrderProducts).ThenInclude(op => op.Product)
-    ];
-    
     public async Task<PageResult<OrderDTO>> Handle(GetOrdersByUserQuery request, CancellationToken cancellationToken) {
         PagedFilter filter = request.Filter;
         IEnumerable<string> searchFields = request.SearchFields ?? [];
 
         var pageResult = await _repository.GetPagedAndSortedResultsAsync(
             filter: filter,
-            baseFilter: o => o.UserId.Equals(request.UserId),
             properties: searchFields,
-            includes: IncludeNavigations
+            query => {
+                return query.Include(o => o.User)
+                        .Include(o => o.OrderProducts)
+                        .ThenInclude(op => op.Product);
+            }
         );
 
        return pageResult.Map(OrderMapper.ToDTO);

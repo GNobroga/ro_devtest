@@ -71,13 +71,14 @@ export class DashboardComponent {
   
   processOrderSummary(summary: OrderSummary) {
 	this.orderSummary = summary;
-	const products = summary.products;
+	const { products } = summary;
+	console.log(products)
 	this.productData = {
-		labels: products.map((product: any) => product.Name),
+		labels: products.map((product: any) => product.name),
 		datasets: [
 		  {
 			label: 'Total de Vendas',
-			data: products.map((product: any) => product.Total),
+			data: products.map((product: any) => product.total),
 			backgroundColor: '#42A5F5',
 			borderColor: '#1E88E5',
 			borderWidth: 1

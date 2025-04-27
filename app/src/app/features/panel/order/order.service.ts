@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BaseService } from '../../../core/services/base.service';
 import { OrderStatus } from './order.enum';
 import { map, Observable, Subject } from 'rxjs';
-import { ChangeOrderStatusResult, DeleteOrderResult, Order, OrderSummary } from './order.model';
+import { ChangeOrderStatusResult, CreateOrUpdateOrder, DeleteOrderResult, Order, OrderSummary } from './order.model';
 import { Filter } from '../../../core/models/filter.model';
 import { PageResult } from '../../../core/models/page-result.model';
 import { QueryParamsUtils } from '../../../core/utilities/query-params';
@@ -47,11 +47,11 @@ export class OrderService extends BaseService {
       );
   }
       
-    //   create(record: CreateProduct): Observable<ApiResponse<CreateProductResult>> {
-    //       return this.handleRequest(
-    //           this.httpClient.post(this.apiUrl, record)
-    //       );
-    //   }
+  create(record: CreateOrUpdateOrder): Observable<ApiResponse<Order>> {
+      return this.handleRequest(
+          this.httpClient.post(this.apiUrl, record)
+      );
+  }
   
     //   update(id: string, record: UpdateProduct): Observable<ApiResponse<UpdateProductResult>> {
     //       return this.handleRequest(

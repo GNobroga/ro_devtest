@@ -35,7 +35,13 @@ public class OrderRepository(DefaultContext context) : BaseRepository<Order>(con
             .SumAsync();
 
         var productDtos = baseProductsQuery
-            .Select(o => new OrderSummaryProductDTO(o.ProductId, o.Product.Name, o.Product.Price * o.Quantity));
+            .GroupBy(o => o.ProductId) 
+            .Select(group => new OrderSummaryProductDTO(
+                group.Key, 
+                group.First().Product.Name, 
+                group.Sum(o => o.Product.Price * o.Quantity) 
+            ));
+
 
         return new OrderSummaryDTO(countOrders, countCustomer, revenue, await productDtos.ToListAsync());
     }
