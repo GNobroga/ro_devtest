@@ -1,0 +1,73 @@
+<!-- client.component.html -->
+<div class="min-h-screen bg-gray-50 flex flex-col">
+    <!-- Toolbar Elegante -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm">
+      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <!-- Logo -->
+        <div class="flex items-center space-x-2">
+          <i class="pi pi-shopping-bag text-2xl text-indigo-600"></i>
+          <span class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            DevTest Store
+          </span>
+        </div>
+  
+        <!-- Search Bar -->
+        <div class="relative w-1/3">
+          <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <i class="pi pi-search"></i>
+          </span>
+          <input 
+            type="text" 
+            placeholder="Pesquisar..." 
+            class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+            pInputText
+          >
+        </div>
+  
+        <!-- User Actions -->
+        <div class="flex items-center space-x-4">
+            <p-button *ngIf="cartItems().length > 0" (click)="cartVisible = true" icon="pi pi-shopping-cart" styleClass="p-button-text"  [badge]="cartItems().length.toString()" badgeSeverity="warn" />
+           <button pButton icon="pi pi-user" (click)="menu.toggle($event)" class="p-button-rounded p-button-text text-gray-600 hover:text-indigo-600"></button>
+        </div>
+    </div>
+</header>
+
+<div class="flex-1">
+    <router-outlet/>
+</div>
+
+</div>
+
+<p-menu #menu [popup]="true" [model]="menus"></p-menu>
+
+
+<!-- Drawer do Carrinho -->
+<p-drawer [(visible)]="cartVisible" position="right" header="Meu Carrinho" [modal]="true"  styleClass="w-full sm:w-96">
+    <div *ngIf="cartItems().length > 0; else emptyCart">
+      <div *ngFor="let item of cartItems()" class="flex items-center gap-4 mb-6 border-b pb-4">
+        <img [src]="item.imageUrl" alt="{{ item.name }}" class="w-16 h-16 object-contain bg-gray-100 rounded" />
+        <div class="flex-1">
+          <div class="font-semibold text-gray-800 truncate">{{ item.name }}</div>
+          <div class="text-sm text-gray-500">Quantidade: {{ item.quantity }}</div>
+          <div class="text-indigo-600 font-bold mt-1">R$ {{ item.price | number: '1.2-2' }}</div>
+        </div>
+        <button (click)="cartService.removeItem(item.productId)" pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm"></button>
+      </div>
+  
+      <!-- Total e botão de finalizar -->
+      <div class="mt-8 pt-4">
+        <div class="flex justify-between font-bold text-lg mb-4">
+          <span>Total: {{ cartService.getTotalPrice() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+        </div>
+        <p-button label="Finalizar Compra" icon="pi pi-check" fluid></p-button>
+      </div>
+    </div>
+  
+    <!-- Carrinho vazio -->
+    <ng-template #emptyCart>
+      <div class="flex flex-col items-center justify-center h-full text-gray-500 text-center">
+        <i class="pi pi-shopping-cart text-5xl mb-4"></i>
+        <p class="text-lg font-semibold">Seu carrinho está vazio.</p>
+      </div>
+    </ng-template>
+  </p-drawer>

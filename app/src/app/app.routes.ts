@@ -14,6 +14,10 @@ export const routes: Routes = [
         loadChildren: () => import('./features/panel/panel.module'),
     },
     {
+        path: 'client',
+        loadChildren: () => import('./features/client/client.module'),
+    },
+    {
         path: '**',
         redirectTo: 'login',
     }

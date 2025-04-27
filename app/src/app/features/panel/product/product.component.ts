@@ -26,7 +26,6 @@ export class ProductComponent extends BaseListComponent<Product>{
       this.service.triggerListReload$.asObservable()
         .pipe(takeUntil(this.destroy$))
         .subscribe(() => {
-          this.resetKeyword();
           this.loadData();
         });
       

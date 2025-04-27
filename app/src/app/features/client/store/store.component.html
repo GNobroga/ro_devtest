@@ -1,0 +1,127 @@
+<main class="container mx-auto px-4 py-8">
+    <!-- Grid de Produtos -->
+    <div class="flex flex-wrap gap-5 [&>p-card]:flex-1">
+      <p-card *ngFor="let product of items"
+              styleClass="bg-white border shadow-lg  border-gray-100 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-indigo-100">
+        
+        <!-- Imagem do Produto -->
+        <div class="relative h-64 overflow-hidden flex items-center justify-center">
+          <img [src]="product.imageUrl" [alt]="product.name"
+               class="max-h-full w-full h-full max-w-full object-contain transition-transform duration-500 hover:scale-105 p-4" />
+        </div>
+  
+        <!-- Corpo do Card -->
+        <div class="p-5">
+          <!-- Nome e Categoria -->
+          <div class="mb-2">
+            <h3 class="text-lg font-bold text-gray-900 mt-1 truncate" [title]="product.name">
+              {{ product.name }}
+            </h3>
+          </div>
+  
+          <!-- Descrição do Produto -->
+          <p class="text-sm text-gray-600 mb-4" [title]="product.description">
+            {{ product.description }}
+          </p>
+  
+          <!-- Preço e Ação -->
+          <div class="flex items-center flex-col gap-3 justify-between pt-4">
+            <div>
+              <span class="text-xl font-bold text-indigo-600">R$ {{ product.price | number: '1.2-2' }}</span>
+            </div>
+            <!-- Botão Adicionar ao Carrinho -->
+            <button pButton 
+                  icon="pi pi-shopping-cart" 
+                  label="Ver Detalhes"
+                  (click)="openProductModal(product)"
+                  class="p-button-rounded p-button-sm bg-indigo-600 text-white hover:bg-indigo-700 border-indigo-600 shadow-md transition-all">
+            </button>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  
+    <!-- Paginação -->
+    <div class="mt-12 flex justify-center">
+      <p-paginator 
+        [showCurrentPageReport]="true" 
+        [rowsPerPageOptions]="[12, 24, 36]"
+        [pageLinkSize]="5"
+        [rows]="pageResult.pageSize"
+        currentPageReportTemplate="Página {currentPage} de {totalPages}"
+        (onPageChange)="onPageChange($event)"
+        [totalRecords]="pageResult.totalItems"
+        styleClass="border-0 bg-transparent text-sm"
+        [dropdownAppendTo]="'body'">
+        
+        <ng-template pTemplate="firstpageicon">
+          <i class="pi pi-angle-double-left text-xs"></i>
+        </ng-template>
+        <ng-template pTemplate="previouspageicon">
+          <i class="pi pi-angle-left text-xs"></i>
+        </ng-template>
+        <ng-template pTemplate="nextpageicon">
+          <i class="pi pi-angle-right text-xs"></i>
+        </ng-template>
+        <ng-template pTemplate="lastpageicon">
+          <i class="pi pi-angle-double-right text-xs"></i>
+        </ng-template>
+      </p-paginator>
+    </div>
+  </main>
+  
+<!-- Modal (Dialog) de Visualizar Produto -->
+<p-dialog [(visible)]="productDialogVisible" [modal]="true" [dismissableMask]="true"
+          [style]="{width: '90vw', maxWidth: '600px'}" [breakpoints]="{'960px': '90vw'}" [baseZIndex]="10000">
+  
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-3">
+      <img *ngIf="selectedProduct?.imageUrl" [src]="selectedProduct?.imageUrl" alt="{{ selectedProduct?.name }}" class="w-10 h-10 object-contain" />
+      <span class="text-lg font-semibold">{{ selectedProduct?.name }}</span>
+    </div>
+  </ng-template>
+
+  <div class="flex flex-col gap-6">
+    <!-- Imagem em destaque -->
+    <div class="rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center h-72">
+      <img [src]="selectedProduct?.imageUrl" alt="{{ selectedProduct?.name }}" class="object-contain max-h-full max-w-full" />
+    </div>
+
+    <!-- Descrição -->
+    <p class="text-gray-600 text-sm leading-relaxed">
+      {{ selectedProduct?.description }}
+    </p>
+
+    <!-- Quantidade e Preço -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+      
+      <!-- Seletor de Quantidade -->
+      <div class="flex items-center gap-4">
+        <label for="quantity" class="font-medium text-gray-700">Quantidade:</label>
+        <div class="flex items-center border rounded overflow-hidden">
+          <button type="button" class="px-3 py-1 text-gray-600 hover:bg-gray-200" (click)="decreaseQuantity()">-</button>
+          <input type="number" id="quantity" [(ngModel)]="selectedQuantity" min="1"
+                class="w-16 text-center border-l border-r outline-none" />
+          <button type="button" class="px-3 py-1 text-gray-600 hover:bg-gray-200" (click)="increaseQuantity()">+</button>
+        </div>
+      </div>
+
+      <!-- Preço -->
+      <div class="text-indigo-600 text-2xl font-bold">
+        R$ {{ selectedProduct?.price | number: '1.2-2' }}
+      </div>
+
+    </div>
+
+    <!-- Botão Adicionar -->
+    <div class="flex justify-end">
+      <button pButton 
+              label="Adicionar ao Carrinho" 
+              icon="pi pi-cart-plus"
+              (click)="addToCart(selectedProduct!)"
+              class="p-button-lg p-button-rounded bg-indigo-600 hover:bg-indigo-700 border-indigo-600 text-white shadow-md transition-all">
+      </button>
+    </div>
+  </div>
+
+</p-dialog>
