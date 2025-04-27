@@ -1,53 +1,104 @@
-<div class="container mx-auto px-4 py-8">
-    <!-- Breadcrumb estilizado -->
-    <div class="mb-6 flex justify-between items-center">
+<div class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Breadcrumb melhorado -->
+     <div class="mb-6 flex justify-between items-center">
         <p-breadcrumb [model]="breadcrumbs" styleClass="border-none bg-white rounded-lg px-4 py-2 shadow-sm" />
     </div>
 
-    <h1 class="text-3xl font-bold text-gray-800 mb-8">Histórico de Pedidos</h1>
+    <!-- Header com título e possível filtro -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Histórico de Pedidos</h1>
+            <p class="text-gray-500 mt-1">Acompanhe todos os seus pedidos realizados</p>
+        </div>
+        <p-iconfield>
+            <p-inputicon styleClass="pi pi-search" />
+            <input [formControl]="keyword" type="text" pInputText placeholder="Pesquisar..." />
+        </p-iconfield>
+    </div>
   
-    <div class="bg-white shadow rounded-lg">
-      <p-table [value]="items" [paginator]="true" [rows]="5" 
-               [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
-               currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-               [globalFilterFields]="['id','status','total']">
-        <ng-template pTemplate="header">
-          <tr>
-            <th pSortableColumn="id">Nº do Pedido <p-sortIcon field="id"></p-sortIcon></th>
-            <th pSortableColumn="placedAt">Data <p-sortIcon field="placedAt"></p-sortIcon></th>
-            <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
-            <th pSortableColumn="total">Total <p-sortIcon field="total"></p-sortIcon></th>
-            <th>Itens</th>
-            <th>Ações</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-order>
-          <tr>
-            <td class="font-medium">{{order.id}}</td>
-            <td>{{ order.placedAt | date: 'd \'de\' MMMM \'de\' yyyy' }}</td>
-            <td>
-              <span class="px-3 py-1 rounded-full text-sm font-medium"
-                    [ngClass]="getStatusClass(order.status)">
-                {{translateStatus(order.status)}}
-              </span>
-            </td>
-            <td class="font-medium">R$ {{order.total.toFixed(2).replace('.', ',')}}</td>
-            <td>{{order.items.length}} {{order.items.length === 1 ? 'item' : 'itens'}}</td>
-            <td>
-              <button pButton pRipple icon="pi pi-eye" 
-                      class="p-button-rounded p-button-text"
-                      [routerLink]="['/pedidos', order.id]"
-                      pTooltip="Ver detalhes" tooltipPosition="top"></button>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="6" class="text-center py-8 text-gray-500">
-              Nenhum pedido encontrado
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
+    <!-- Tabela aprimorada -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <p-table [value]="items" [paginator]="true" [rows]="10" 
+                [rowsPerPageOptions]="[5,10,20,50]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="{totalRecords} pedidos no total"
+                [globalFilterFields]="['id','status','total']"
+                styleClass="p-datatable-striped p-datatable-gridlines"
+            
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown">
+            <ng-template pTemplate="header">
+                <tr class="bg-gray-50">
+                    <th pSortableColumn="id" class="!text-gray-600 !font-medium">Nº DO PEDIDO <p-sortIcon field="id"></p-sortIcon></th>
+                    <th pSortableColumn="placedAt" class="!text-gray-600 !font-medium">DATA <p-sortIcon field="placedAt"></p-sortIcon></th>
+                    <th pSortableColumn="status" class="!text-gray-600 !font-medium">STATUS <p-sortIcon field="status"></p-sortIcon></th>
+                    <th pSortableColumn="total" class="!text-gray-600 !font-medium text-right">TOTAL <p-sortIcon field="total"></p-sortIcon></th>
+                    <th class="!text-gray-600 !font-medium">ITENS</th>
+                    <th class="!text-gray-600 !font-medium text-center">AÇÕES</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-order>
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="font-semibold text-gray-700">#{{order.id}}</td>
+                    <td class="text-gray-600">{{ order.placedAt | date: 'dd/MM/yyyy • HH:mm' }}</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full"></span>
+                            <span class="px-3 py-1 rounded-full text-xs font-medium capitalize"
+                                  [ngClass]="getStatusClass(order.status)">
+                                {{translateStatus(order.status)}}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="font-semibold text-right text-gray-800">R$ {{order.total.toFixed(2).replace('.', ',')}}</td>
+                    <td class="text-gray-600">
+                        <div class="flex items-center gap-1">
+                            <span>{{order.items.length}} {{order.items.length === 1 ? 'item' : 'itens'}}</span>
+                            <button pButton pRipple icon="pi pi-info-circle" 
+                                    class="p-button-rounded p-button-text p-button-sm !text-gray-400 hover:!text-gray-600"
+                                
+                                    pTooltip="Ver itens" tooltipPosition="top"></button>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <button pButton pRipple icon="pi pi-eye" 
+                                class="p-button-rounded p-button-outlined p-button-secondary p-button-sm"
+                                [routerLink]="['/pedidos', order.id]"
+                                pTooltip="Ver detalhes" tooltipPosition="top"></button>
+                        <button *ngIf="order.status === 'PENDING'" pButton pRipple icon="pi pi-times" 
+                                class="p-button-rounded p-button-outlined p-button-danger p-button-sm ml-2"
+                                pTooltip="Cancelar pedido" tooltipPosition="top"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6" class="text-center py-12">
+                        <div class="flex flex-col items-center justify-center gap-3 text-gray-400">
+                            <i class="pi pi-inbox text-4xl"></i>
+                            <p class="text-lg">Nenhum pedido encontrado</p>
+                            <p class="text-sm max-w-md">Você ainda não realizou nenhum pedido ou não encontramos resultados para sua busca.</p>
+                            <button routerLink="/client" pButton pRipple label="Ir para a loja" 
+                                    icon="pi pi-shopping-bag" 
+                                    class="p-button-text !text-primary-500 mt-2"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="loadingbody">
+                <tr *ngFor="let i of [].constructor(3)">
+                    <td colspan="6">
+                        <div class="h-12 bg-gray-100 animate-pulse rounded"></div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <!-- Dica para o usuário -->
+    <div class="mt-6 bg-blue-50 border border-blue-100 rounded-lg p-4 flex items-start gap-3">
+        <i class="pi pi-info-circle text-blue-400 mt-1"></i>
+        <div>
+            <a href="https://github.com/GNobroga" class="font-medium text-blue-800">Precisa de ajuda com algum pedido?</a>
+            <p class="text-blue-600 text-sm">Entre em contato com nosso <a href="#" class="underline font-medium">atendimento ao cliente</a> caso tenha dúvidas sobre seus pedidos.</p>
+        </div>
     </div>
 </div>

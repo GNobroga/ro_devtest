@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
+import { Injectable, signal } from "@angular/core";
 import { BaseService } from "../../../core/services/base.service";
 import { CreateProduct, CreateProductResult, DeleteProductResult, Product, UpdateProduct, UpdateProductResult } from "./product.model";
-import { filter, map, Observable, Subject } from "rxjs";
+import { BehaviorSubject, filter, map, Observable, Subject } from "rxjs";
 import { ApiResponse } from "../../../core/models/api-response.model";
 import { Filter } from "../../../core/models/filter.model";
 import { QueryParamsUtils } from "../../../core/utilities/query-params";
@@ -12,8 +12,15 @@ export class ProductService extends BaseService {
 
     triggerListReload$ = new Subject();
 
+    private keywordSubject = new BehaviorSubject<string>(''); 
+    keyword$ = this.keywordSubject.asObservable();
+
     constructor() {
         super('product');
+    }
+
+    setKeyword(keyword: string) {
+        this.keywordSubject.next(keyword);
     }
 
     list(filters: Filter): Observable<PageResult<Product>> {

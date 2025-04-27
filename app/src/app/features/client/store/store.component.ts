@@ -5,6 +5,7 @@ import { mergeAll, of, takeUntil } from 'rxjs';
 import { Filter } from '../../../core/models/filter.model';
 import { Product } from '../../panel/product/product.model';
 import { CartService } from '../services/cart.service';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-store',
@@ -17,8 +18,18 @@ export class StoreComponent extends BaseListComponent<Product> implements OnInit
   selectedQuantity = 1;
   productDialogVisible = false;
 
+  breadcrumbs: MenuItem[] = [
+      {
+        label: 'Home',
+        icon: 'pi pi-home',
+        routerLink: '/client'
+      }
+  ];
   
-  constructor(readonly productService: ProductService, readonly cartService: CartService) {
+  constructor(
+    readonly productService: ProductService, 
+    readonly cartService: CartService
+  ) {
     super();
   }
 
@@ -51,6 +62,9 @@ export class StoreComponent extends BaseListComponent<Product> implements OnInit
 
   override ngOnInit(): void {
     super.ngOnInit();
+
+    this.productService.keyword$.pipe(takeUntil(this.destroy$))
+      .subscribe(this.setKeyword.bind(this))
 
     this.productService.triggerListReload$.asObservable()
       .pipe(takeUntil(this.destroy$))

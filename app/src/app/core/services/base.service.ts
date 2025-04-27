@@ -1,11 +1,10 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
-import { catchError, delay, finalize, map, Observable, pipe, throwError } from "rxjs";
+import { ToastrService } from "ngx-toastr";
+import { catchError, delay, finalize, Observable, throwError } from "rxjs";
 import { environment } from "../../../environments/environment";
 import { ApiResponse } from "../models/api-response.model";
 import { initialize } from "../rxjs/initialize";
-import { MessageService } from "primeng/api";
-import { ToastrService } from "ngx-toastr";
 
 @Injectable()
 export abstract class BaseService {

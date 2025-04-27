@@ -1,8 +1,9 @@
 import { Component, computed, effect, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { filter } from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-panel',
@@ -16,6 +17,10 @@ export class PanelComponent implements OnInit {
 
   currentUrl = location.pathname;
 
+  keywordControl = new FormControl('');
+
+  destroy$ = new Subject();
+
   items: MenuItem[] = [
     {
       label: 'Perfil',
@@ -25,15 +30,16 @@ export class PanelComponent implements OnInit {
     {
       label: 'Sair',
       icon: 'pi pi-sign-out',
+      command: () => this.authService.logout(),
     }
   ];
 
-  constructor(readonly router: Router, readonly authService: AuthService) {
-
-  }
+  constructor(
+    readonly router: Router, 
+    readonly authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-
       this.router.events.pipe(filter(e => e instanceof NavigationEnd))
         .subscribe(e => this.currentUrl = e.url);
   }

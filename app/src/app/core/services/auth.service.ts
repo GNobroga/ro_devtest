@@ -67,6 +67,7 @@ export class AuthService extends BaseService {
     }
 
     logout() {
+        console.log('oiiiii')
         this.clearTokenStorage();
         this.router.navigate(['/login']).then(() => {
             this.toastrService.success('Você saiu do sistema. Até logo!');
@@ -76,11 +77,23 @@ export class AuthService extends BaseService {
     getNewAccessToken(refreshToken: string): Observable<TokenInfo> {
         return this.handleRequest<TokenInfo>(this.httpClient.post(this.extendApiUrl("/exchange-token"), {
             refreshToken
-    })).pipe(map(r => r.data!));
+        })).pipe(map(r => r.data!));
     }
 
+    get userRoles() {
+        return this.tokenPayload?.role?.split(' ') ?? [];
+    }
+
+    get isTokenExpired() {
+        const exp = this.tokenPayload?.exp;
+        if (!exp) {
+          return true; 
+        }
+        return (exp * 1000) < Date.now();
+      }
+
     get isAuthenticated() {
-        return this.accessToken != null;
+        return this.accessToken != null && !this.isTokenExpired;
     }
 
     setTokenStorage(storage: TokenStorage) {

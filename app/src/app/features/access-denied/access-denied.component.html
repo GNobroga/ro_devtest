@@ -1,0 +1,46 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col items-center justify-center p-4">
+  <div class="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-red-500 to-red-600 p-6 text-center">
+      <i class="pi pi-lock text-5xl text-white"></i>
+      <h1 class="text-2xl font-bold text-white mt-4">Acesso Negado</h1>
+    </div>
+
+    <!-- Content -->
+    <div class="p-6 text-center">
+      <p class="text-gray-600 mb-6">
+        Você não possui permissão para acessar esta página. 
+        Entre em contato com o administrador do sistema se acredita que isto é um erro.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button pButton 
+                label="Voltar à Página Anterior" 
+                icon="pi pi-arrow-left" 
+                class="p-button-outlined p-button-secondary"
+                (click)="goBack()"></button>
+        
+        <button pButton 
+                label="Ir para a Página Inicial" 
+                icon="pi pi-home" 
+                (click)="goHome()"></button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-50 px-6 py-4 text-center border-t border-gray-200">
+      <p class="text-sm text-gray-500">
+        Código do erro: 403 Forbidden
+        <span *ngIf="timestamp" class="block mt-1">Horário: {{ timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Support Link -->
+  <div class="mt-8 text-center">
+    <a href="mailto:suporte@empresa.com" class="text-red-600 hover:text-red-700 font-medium inline-flex items-center">
+      <i class="pi pi-lifebuoy mr-2"></i>
+      Precisa de ajuda? Contate o suporte técnico
+    </a>
+  </div>
+</div>

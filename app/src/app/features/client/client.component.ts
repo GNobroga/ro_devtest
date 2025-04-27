@@ -1,12 +1,13 @@
-import { Component, computed, OnInit } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit } from '@angular/core';
 import { ProductService } from '../panel/product/product.service';
 import { Product } from '../panel/product/product.model';
 import { BaseListComponent } from '../../core/components/base-list.component';
-import { last, mergeAll, of, takeUntil } from 'rxjs';
+import { last, mergeAll, of, Subject, takeUntil } from 'rxjs';
 import { Filter } from '../../core/models/filter.model';
 import { MenuItem } from 'primeng/api';
 import { CartItem, CartService } from './services/cart.service';
 import { AuthService } from '../../core/services/auth.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-client',
@@ -14,7 +15,7 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './client.component.html',
   styleUrl: './client.component.scss'
 })
-export class ClientComponent implements OnInit {
+export class ClientComponent implements OnInit, OnDestroy {
 
   menus: MenuItem[] = [
     {
@@ -29,15 +30,31 @@ export class ClientComponent implements OnInit {
     }
   ];
 
+  keywordControl = new FormControl('');
+
   cartItems = computed(() => this.cartService.items());
 
   cartVisible = false;
 
-  constructor(readonly cartService: CartService, readonly authService: AuthService) {}
+  destroy$ = new Subject();
+
+  constructor(
+    readonly cartService: CartService, 
+    readonly authService: AuthService,
+    readonly productService: ProductService
+  ) {}
   
   ngOnInit(): void {
+
+    this.keywordControl.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe(value => this.productService.setKeyword(value!));
+
     this.cartService.cartItems$.subscribe(cartItems => {
         this.cartVisible = cartItems.length > 0;
     });
+  }
+
+  ngOnDestroy(): void {
+      this.destroy$.next(true);
   }
 }

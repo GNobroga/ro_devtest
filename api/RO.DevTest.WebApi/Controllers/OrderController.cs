@@ -24,6 +24,7 @@ public class OrderController(IMediator mediator, IAuthService authService) : Con
     private readonly IMediator _mediator = mediator;
 
     private static readonly string[] SearchFields = [
+      "Id",
       "User.Email",
       "User.Name",
       "User.Id"
