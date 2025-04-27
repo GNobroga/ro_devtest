@@ -5,8 +5,9 @@
     </div>
 
     
-    <!-- Grid de Produtos -->
-    <div class="gap-5 grid grid-cols-4">
+   @if (items.length > 0)  {
+     <!-- Grid de Produtos -->
+     <div class="gap-5 grid grid-cols-4">
       <p-card *ngFor="let product of items"
               styleClass="bg-white border border-black border-opacity-20 shadow-lg   rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-indigo-100">
         
@@ -46,7 +47,14 @@
         </div>
       </p-card>
     </div>
-  
+   } @else {
+    <div class="flex flex-col items-center justify-center py-16 bg-gray-100 rounded-lg shadow-md">
+      <p class="text-xl font-semibold text-gray-600">Ops! Nenhum produto encontrado.</p>
+      <p class="text-sm text-gray-400 mb-4">Parece que não há produtos disponíveis no momento. Tente novamente mais tarde.</p>
+      <i class="pi pi-shopping-cart text-indigo-600 text-6xl mb-4"></i>
+    </div>
+   }
+
     <!-- Paginação -->
     <div class="mt-12 flex justify-center">
       <p-paginator 
