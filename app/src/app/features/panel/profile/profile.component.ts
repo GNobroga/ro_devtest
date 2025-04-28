@@ -77,6 +77,8 @@ export class ProfileComponent extends BaseFormComponent implements OnInit {
       if (this.displayPasswordControl.disabled) {
         this.displayPasswordControl.setValue(false);
       }
+      this.form.get('password')?.removeValidators([Validators.required, Validators.minLength(6)]);
+      this.form.get('passwordConfirmation')?.removeValidators(passwordMatchValidator(this.form, 'password'));
     });
   }
 
