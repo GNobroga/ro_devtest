@@ -26,12 +26,12 @@ export abstract class BaseListComponent<T> implements OnInit, OnDestroy {
     protected filters: Filter = {
         keyword: '',
         page: 1,
-        pageSize: 100,
+        pageSize: 5,
         sort: 'asc',
         sortBy: 'id',
     };
 
-    protected pageResult: PageResult<T> = {} as PageResult<T>;
+    protected pageResult!: PageResult<T>;
 
     protected filterChanged$ = new Subject<Filter>();
 
